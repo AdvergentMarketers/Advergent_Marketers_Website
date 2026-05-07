@@ -1,0 +1,24 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    // Removed the "src/" from these paths
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        offWhite: "#F7F7F8",
+        matteBlack: "#1C1C1C",
+        accentBlue: "#0055FF",
+      },
+      fontFamily: {
+        sans: ['var(--font-montserrat)', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+};
+export default config;

@@ -57,14 +57,13 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 flex items-center">
-            {/* Replace /logo.png with your exact filename in the public folder */}
+          <Link href="/" className="flex-shrink-0 flex items-center ml-2 md:ml-0">
             <Image 
               src="/logo.svg" 
               alt="Advergent Marketers" 
-              width={30} 
-              height={30} 
-              className="h-8 w-auto object-contain"
+              width={100} 
+              height={24} 
+              className="h-6 md:h-8 w-auto object-contain"
               priority
             />
           </Link>

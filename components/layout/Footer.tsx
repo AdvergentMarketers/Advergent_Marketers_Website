@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -8,9 +9,14 @@ export default function Footer() {
           
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
-            <span className="text-2xl font-extrabold tracking-tighter text-matteBlack uppercase">
-              Advergent<span className="text-accentBlue">.</span>
-            </span>
+            {/* Replace /logo.png with your exact filename in the public folder */}
+            <Image 
+              src="/logo.svg" 
+              alt="Advergent Marketers" 
+              width={100} 
+              height={24} 
+              className="h-10 w-auto object-contain mb-4"
+            />
             <p className="mt-4 text-sm text-matteBlack/70 max-w-sm leading-relaxed font-medium">
               A premium digital growth agency engineering high-conversion architectures and scalable ecosystems.
             </p>

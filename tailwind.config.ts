@@ -9,6 +9,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        }
+      },
       colors: {
         offWhite: "#F7F7F8",
         matteBlack: "#1C1C1C",

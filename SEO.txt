@@ -1,0 +1,43 @@
+Phase 0: The Target Vector (Before On-Page)
+Before touching any code, you need a mathematical target. If you optimize blindly, you rank for nothing.
+
+Keyword Mapping: Assign exactly 1 primary keyword and 2-3 secondary keywords to each existing page.
+
+Example: The Home page targets "Digital Growth Agency" and "Full-Stack Marketing Architecture". The About page targets "Fractional CMO India" or "Technical Marketing Experts".
+
+Search Intent Matching: Ensure your copy actually answers what the user is looking for when they type those words.
+
+Phase 1: Technical & On-Page Optimization (Your Step 1)
+Now you apply those targets to your Next.js infrastructure.
+
+Dynamic Metadata: In your layout.tsx and page.tsx files, deploy the Next.js Metadata API. Write highly optimized <title> and <meta name="description"> tags using your target keywords.
+
+Open Graph (OG) Images: Ensure every page has an og:image so when your links are shared on LinkedIn, Twitter, or iMessage, they generate a beautiful, matte-black preview card.
+
+Schema Markup: Inject LocalBusiness and Organization JSON-LD into your root layout so Google's bots instantly understand who you are.
+
+Phase 2: The Tracking Infrastructure (The "In-Between")
+Before you launch a blog and drive traffic, you need the sensors in place to measure it.
+
+Google Search Console (GSC): This is mandatory. Verify your domain with Google. This is how you force Google to index your site and how you see exactly what keywords are bringing you traffic.
+
+Automated Sitemap: Install a package like next-sitemap to dynamically generate a sitemap.xml and robots.txt file every time you build the site. Submit this XML file to Google Search Console.
+
+Analytics: Deploy Google Analytics 4 (GA4) or a privacy-first alternative (like Fathom or Plausible) to track user behavior, bounce rates, and lead conversions.
+
+Phase 3: The Local Authority Node (The "In-Between")
+Google Business Profile (GBP): Remember that perfectly optimized 750-character GBP description we wrote earlier? Deploy it now. Getting your agency verified on Google Maps establishes an immediate layer of trust and captures high-intent local/national search traffic while your global organic rankings build up.
+
+Phase 4: The Content Ecosystem (Your Step 2)
+Now you build the "Blog", but as an agency, do not call it a "Blog". Call it "Insights," "Protocols," or "Case Studies." It sounds much more premium.
+
+MDX or Headless CMS: Set up Sanity, Strapi, or just local MDX files to manage your articles so you don't have to hardcode every new post.
+
+Pillar Content Strategy: Write 3-4 massive, definitive guides (e.g., "The Ultimate Guide to E-Commerce Infrastructure in 2026"). Then, write smaller articles that link back to those main pillars.
+
+Phase 5: Off-Page Authority (What's Next)
+Once the content is live, you must prove to Google that the industry respects you.
+
+High-Fidelity Backlinks: Get other reputable tech, business, and marketing websites to link to your Insights or Home page.
+
+Digital PR: Get yourself quoted as an expert in industry publications.

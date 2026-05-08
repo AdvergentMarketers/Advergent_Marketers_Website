@@ -46,6 +46,7 @@ export default function ClientDashboard() {
   }
 
   // Pending Setup State
+  // Pending Setup State
   if (!clientData) {
     return (
       <div className="min-h-screen bg-offWhite pt-32 px-6 flex flex-col items-center text-center">
@@ -56,7 +57,20 @@ export default function ClientDashboard() {
         <p className="text-matteBlack/60 font-medium max-w-md mb-8">
           Your account has been secured, but your strategist is still deploying your digital architecture. Please check back shortly.
         </p>
-        <a href="mailto:ginniomen22@gmail.com" className="px-6 py-3 bg-matteBlack text-white font-bold text-sm uppercase tracking-widest rounded-md">Contact Support</a>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <a href="mailto:ginniomen22@gmail.com" className="px-6 py-3 bg-matteBlack text-white font-bold text-sm uppercase tracking-widest rounded-md hover:bg-accentBlue hover:text-matteBlack transition-colors shadow-sm">
+            Contact Support
+          </a>
+          <button 
+            onClick={async () => {
+              await supabase.auth.signOut();
+              window.location.href = '/auth';
+            }} 
+            className="px-6 py-3 bg-white border border-matteBlack/10 text-matteBlack font-bold text-sm uppercase tracking-widest rounded-md hover:border-matteBlack/30 transition-colors shadow-sm"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
     );
   }

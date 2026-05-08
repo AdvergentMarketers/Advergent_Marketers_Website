@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase"; 
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,9 +58,15 @@ export default function Navbar() {
           
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <span className="text-2xl font-bold tracking-tighter text-matteBlack uppercase">
-              Advergent<span className="text-accentBlue">.</span>
-            </span>
+            {/* Replace /logo.png with your exact filename in the public folder */}
+            <Image 
+              src="/logo.svg" 
+              alt="Advergent Marketers" 
+              width={30} 
+              height={30} 
+              className="h-8 w-auto object-contain"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

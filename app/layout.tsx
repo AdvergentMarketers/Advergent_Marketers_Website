@@ -4,6 +4,9 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { CurrencyProvider } from "@/components/providers/CurrencyProvider";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 // Locally hosted font for maximum speed and zero CLS
 const montserrat = Montserrat({

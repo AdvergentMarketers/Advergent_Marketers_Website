@@ -76,11 +76,23 @@ export default function AdminDashboard() {
                   + Onboard Client
                 </Link>
               )}
+              
               {activeTab === "roster" && (
                 <Link href="/admin/add-member" className="px-6 py-2 bg-matteBlack text-white font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
                   + Add Team Member
                 </Link>
               )}
+              <button 
+             onClick={async () => {
+                const { createClient } = await import("../../lib/supabase");
+                const supabase = createClient();
+                await supabase.auth.signOut();
+                window.location.href = '/auth';
+              }} 
+              className="px-6 py-2 bg-white border border-matteBlack/10 text-matteBlack font-bold rounded-md text-xs uppercase tracking-widest hover:border-matteBlack/30 transition shadow-sm text-center"
+              >
+                Sign Out
+              </button>
             </div>
           </div>
 
@@ -197,11 +209,13 @@ export default function AdminDashboard() {
                     </tbody>
                   </table>
                 )}
-
+                
               </div>
-            </div>
+           </div>
+           
           )}
         </FadeIn>
+        
       </div>
     </div>
   );

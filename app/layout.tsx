@@ -22,6 +22,42 @@ export const metadata: Metadata = {
   },
   description: "A premium digital growth agency engineering high-conversion architectures and scalable ecosystems.",
   metadataBase: new URL('https://advergentmarketers.com'),
+  
+  keywords: [
+    "Digital Marketing Agency",
+    "Performance Marketing Agency",
+    "SEO Services",
+    "Growth Architecture",
+    "Paid Media Specialists"
+  ],
+  
+  openGraph: {
+    title: "Advergent Marketers | Digital Growth Agency",
+    description: "Engineering high-conversion ecosystems and algorithmic dominance.",
+    url: "https://advergentmarketers.com",
+    siteName: "Advergent Marketers",
+    images: [
+      {
+        url: "/App_icon.png", 
+        width: 800,
+        height: 800,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 
   appleWebApp: {
     title: "Advergent",

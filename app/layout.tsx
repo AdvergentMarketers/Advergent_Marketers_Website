@@ -4,9 +4,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { CurrencyProvider } from "@/components/providers/CurrencyProvider";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Locally hosted font for maximum speed and zero CLS
 const montserrat = Montserrat({
@@ -22,7 +21,13 @@ export const metadata: Metadata = {
     default: "Advergent Marketers | Digital Growth Architecture",
   },
   description: "A premium digital growth agency engineering high-conversion architectures and scalable ecosystems.",
-  metadataBase: new URL('https://advergentmarketers.com'), // Updated to your new domain!
+  metadataBase: new URL('https://advergentmarketers.com'),
+
+  appleWebApp: {
+    title: "Advergent",
+    statusBarStyle: "black-translucent",
+    capable: true,
+  },
 };
 
 export default function RootLayout({
@@ -40,6 +45,10 @@ export default function RootLayout({
           </main>
           <Footer />
         </CurrencyProvider>
+        
+        {/* Vercel Performance & Analytics Tracking Active */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

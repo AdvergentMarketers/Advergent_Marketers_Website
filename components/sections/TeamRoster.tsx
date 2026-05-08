@@ -85,7 +85,8 @@ export default function TeamRoster() {
                 <FadeIn 
                   key={member.id} 
                   delay={index * 0.1}
-                  className="w-[30vw] min-w-[115px] sm:w-[280px] md:w-[350px] flex-none snap-center"
+                  // EXPANDED WIDTH: Changed from 30vw to 45vw so it takes up nearly half the screen
+                  className="w-[45vw] min-w-[160px] sm:w-[280px] md:w-[350px] flex-none snap-center"
                 >
                   
                   {/* Matte Black Premium Card */}
@@ -107,12 +108,12 @@ export default function TeamRoster() {
                       )}
                     </div>
 
-                    {/* Member Data */}
-                    <div className="p-3 sm:p-6 md:p-8 flex-grow flex flex-col">
-                      <h4 className="text-[11px] sm:text-xl md:text-2xl font-extrabold text-white mb-0.5 md:mb-1 truncate">
+                    {/* Member Data - Padding and text sizes increased for the wider card */}
+                    <div className="p-4 sm:p-6 md:p-8 flex-grow flex flex-col">
+                      <h4 className="text-sm sm:text-xl md:text-2xl font-extrabold text-white mb-0.5 md:mb-1 truncate">
                         {member.name}
                       </h4>
-                      <p className="text-accentBlue text-[8px] sm:text-xs md:text-sm font-bold uppercase tracking-widest mb-2 md:mb-4 truncate">
+                      <p className="text-accentBlue text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest mb-2 md:mb-4 truncate">
                         {member.designation}
                       </p>
                       
@@ -120,14 +121,14 @@ export default function TeamRoster() {
                         {member.experience_details}
                       </p>
 
-                      <div className="pt-2 md:pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 mt-auto">
+                      <div className="pt-3 md:pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 mt-auto">
                         <div className="flex flex-col">
-                          <span className="text-[7px] md:text-[10px] uppercase tracking-widest text-white/40 font-bold">Experience</span>
-                          <span className="text-[9px] sm:text-xs md:text-sm text-white font-bold">{member.years_experience}+ Yrs</span>
+                          <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/40 font-bold">Experience</span>
+                          <span className="text-xs md:text-sm text-white font-bold">{member.years_experience}+ Yrs</span>
                         </div>
                         
                         {member.specialization && (
-                          <div className="bg-white/5 px-1.5 py-1 md:px-3 md:py-1.5 rounded-sm md:rounded-md border border-white/10 text-white/70 text-[7px] sm:text-[10px] md:text-xs font-semibold truncate max-w-full">
+                          <div className="bg-white/5 px-2 py-1 md:px-3 md:py-1.5 rounded-sm md:rounded-md border border-white/10 text-white/70 text-[8px] sm:text-[10px] md:text-xs font-semibold truncate max-w-full">
                             {member.specialization}
                           </div>
                         )}

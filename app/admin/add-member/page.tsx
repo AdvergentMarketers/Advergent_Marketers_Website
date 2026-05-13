@@ -15,10 +15,17 @@ export default function AddMemberPage() {
 
   const [formData, setFormData] = useState({
     name: "",
-    email: "", // <-- NEW: Email State
+    email: "",
     designation: "",
     specialization: "",
     experience_details: "",
+    bio: "",
+    portfolio_url: "",
+    linkedin_url: "",
+    twitter_url: "",
+    github_url: "",
+    brands_worked_with: "",
+    software_stack: "",
     certifications: "",
     years_experience: "0",
     priority: "10", 
@@ -108,30 +115,62 @@ export default function AddMemberPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Work Experience Details (Brief)</label>
-                <textarea rows={3} required value={formData.experience_details} onChange={e => setFormData({...formData, experience_details: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="Led e-commerce scaling at X, handled $500k ad spend at Y..." />
+                <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Work Experience (Brief for Homepage Card)</label>
+                <textarea rows={2} required value={formData.experience_details} onChange={e => setFormData({...formData, experience_details: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="Led e-commerce scaling at X..." />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Years of Experience</label>
-                  <input type="number" required value={formData.years_experience} onChange={e => setFormData({...formData, years_experience: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" min="0" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Certifications & Licenses</label>
-                  <input type="text" value={formData.certifications} onChange={e => setFormData({...formData, certifications: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="AWS Certified, Google Ads Expert..." />
-                </div>
-              </div>
+              {/* NEW: Dedicated Profile Page Data */}
+              <div className="pt-8 border-t border-matteBlack/10">
+                <h3 className="text-xl font-extrabold text-matteBlack mb-6 flex items-center gap-3">
+                  <span className="w-4 h-[2px] bg-accentBlue"></span> Dedicated Profile Data
+                </h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Full Biography</label>
+                    <textarea rows={4} value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold leading-relaxed" placeholder="Write their full professional story here..." />
+                  </div>
 
-              <div className="flex items-center gap-6 p-6 bg-offWhite rounded-xl border border-matteBlack/10">
-                <div className="flex-1">
-                  <h4 className="text-sm font-bold text-matteBlack">Available for Freelance / Consulting?</h4>
-                  <p className="text-xs font-medium text-matteBlack/60 mt-1">If enabled, a "Hire Me" button will appear on their profile card.</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Brands Worked With (Comma Separated)</label>
+                      <input type="text" value={formData.brands_worked_with} onChange={e => setFormData({...formData, brands_worked_with: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="Nike, Apple, Sony, Tesla" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Software Stack (Comma Separated)</label>
+                      <input type="text" value={formData.software_stack} onChange={e => setFormData({...formData, software_stack: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="Photoshop, Figma, Premiere Pro, VS Code" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">GitHub / Behance URL</label>
+                      <input type="url" value={formData.github_url} onChange={e => setFormData({...formData, github_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">LinkedIn URL</label>
+                      <input type="url" value={formData.linkedin_url} onChange={e => setFormData({...formData, linkedin_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">X (Twitter) URL</label>
+                      <input type="url" value={formData.twitter_url} onChange={e => setFormData({...formData, twitter_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="https://..." />
+                    </div>
+                  </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">GitHub / Behance URL</label>
+                      <input type="url" value={formData.github_url} onChange={e => setFormData({...formData, github_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">LinkedIn URL</label>
+                      <input type="url" value={formData.linkedin_url} onChange={e => setFormData({...formData, linkedin_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">X (Twitter) URL</label>
+                      <input type="url" value={formData.twitter_url} onChange={e => setFormData({...formData, twitter_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="https://..." />
+                    </div>
+                  </div>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" checked={formData.available_for_freelance} onChange={e => setFormData({...formData, available_for_freelance: e.target.checked})} />
-                  <div className="w-11 h-6 bg-matteBlack/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accentBlue"></div>
-                </label>
               </div>
 
               <div>

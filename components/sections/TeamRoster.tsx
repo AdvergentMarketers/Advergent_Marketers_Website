@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FadeIn } from "@/components/ui/MotionWrapper";
 import { createClient } from "@/lib/supabase";
 import Image from "next/image";
+import Link from "next/link";
 
 type TeamMember = {
   id: string;
@@ -89,53 +90,58 @@ export default function TeamRoster() {
                   className="w-[45vw] min-w-[160px] sm:w-[280px] md:w-[350px] flex-none snap-center"
                 >
                   
-                  {/* Matte Black Premium Card */}
-                  <div className="relative bg-matteBlack rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/10 flex flex-col h-full transform hover:-translate-y-2 transition-all duration-500">
+                  {/* THE FIX: Wrapped the entire card in a Next.js Link */}
+                  <Link href={`/team/${member.id}`} className="block h-full cursor-pointer focus:outline-none">
                     
-                    {/* Portrait Image */}
-                    <div className="relative w-full aspect-[4/5] bg-matteBlack/50 overflow-hidden border-b border-white/10">
-                      {member.image_url ? (
-                        <Image 
-                          src={member.image_url} 
-                          alt={member.name} 
-                          fill 
-                          className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 opacity-90 group-hover:opacity-100 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-matteBlack text-white/20">
-                          <svg className="w-8 h-8 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Member Data - Padding and text sizes increased for the wider card */}
-                    <div className="p-4 sm:p-6 md:p-8 flex-grow flex flex-col">
-                      <h4 className="text-sm sm:text-xl md:text-2xl font-extrabold text-white mb-0.5 md:mb-1 truncate">
-                        {member.name}
-                      </h4>
-                      <p className="text-accentBlue text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest mb-2 md:mb-4 truncate">
-                        {member.designation}
-                      </p>
+                    {/* Matte Black Premium Card */}
+                    <div className="relative bg-matteBlack rounded-xl md:rounded-2xl overflow-hidden shadow-xl border border-white/10 flex flex-col h-full transform hover:-translate-y-2 transition-all duration-500">
                       
-                      <p className="hidden md:block text-white/60 text-sm font-medium leading-relaxed mb-6 flex-grow">
-                        {member.experience_details}
-                      </p>
-
-                      <div className="pt-3 md:pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 mt-auto">
-                        <div className="flex flex-col">
-                          <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/40 font-bold">Experience</span>
-                          <span className="text-xs md:text-sm text-white font-bold">{member.years_experience}+ Yrs</span>
-                        </div>
-                        
-                        {member.specialization && (
-                          <div className="bg-white/5 px-2 py-1 md:px-3 md:py-1.5 rounded-sm md:rounded-md border border-white/10 text-white/70 text-[8px] sm:text-[10px] md:text-xs font-semibold truncate max-w-full">
-                            {member.specialization}
+                      {/* Portrait Image */}
+                      <div className="relative w-full aspect-[4/5] bg-matteBlack/50 overflow-hidden border-b border-white/10">
+                        {member.image_url ? (
+                          <Image 
+                            src={member.image_url} 
+                            alt={member.name} 
+                            fill 
+                            className="object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700 opacity-90 group-hover:opacity-100 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-matteBlack text-white/20">
+                            <svg className="w-8 h-8 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                           </div>
                         )}
                       </div>
+
+                      {/* Member Data - Padding and text sizes increased for the wider card */}
+                      <div className="p-4 sm:p-6 md:p-8 flex-grow flex flex-col">
+                        <h4 className="text-sm sm:text-xl md:text-2xl font-extrabold text-white mb-0.5 md:mb-1 truncate">
+                          {member.name}
+                        </h4>
+                        <p className="text-accentBlue text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest mb-2 md:mb-4 truncate">
+                          {member.designation}
+                        </p>
+                        
+                        <p className="hidden md:block text-white/60 text-sm font-medium leading-relaxed mb-6 flex-grow">
+                          {member.experience_details}
+                        </p>
+
+                        <div className="pt-3 md:pt-6 border-t border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-4 mt-auto">
+                          <div className="flex flex-col">
+                            <span className="text-[8px] md:text-[10px] uppercase tracking-widest text-white/40 font-bold">Experience</span>
+                            <span className="text-xs md:text-sm text-white font-bold">{member.years_experience}+ Yrs</span>
+                          </div>
+                          
+                          {member.specialization && (
+                            <div className="bg-white/5 px-2 py-1 md:px-3 md:py-1.5 rounded-sm md:rounded-md border border-white/10 text-white/70 text-[8px] sm:text-[10px] md:text-xs font-semibold truncate max-w-full">
+                              {member.specialization}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
                     </div>
 
-                  </div>
+                  </Link>
                 </FadeIn>
               ))}
             </div>

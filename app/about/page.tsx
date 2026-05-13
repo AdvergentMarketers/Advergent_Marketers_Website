@@ -114,17 +114,28 @@ export default function AboutPage() {
                   </div>
 
                   {/* Action Footer */}
-                  <div className={`p-6 border-t ${member.available_for_freelance ? 'bg-accentBlue/5 border-accentBlue/20' : 'bg-offWhite border-matteBlack/5'}`}>
+                  <div className={`p-6 border-t flex flex-col gap-3 ${member.available_for_freelance ? 'bg-accentBlue/5 border-accentBlue/20' : 'bg-offWhite border-matteBlack/5'}`}>
+                    
+                    {/* NEW: Route to Dynamic Profile Page */}
+                    <Link 
+                      href={`/team/${member.id}`}
+                      className="block w-full py-3 text-center text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-300 bg-matteBlack text-white hover:bg-accentBlue hover:shadow-md"
+                    >
+                      View Full Profile
+                    </Link>
+
+                    {/* Existing Contact / Hire Button (Converted to Secondary Style) */}
                     <a 
                       href={"mailto:" + member.email}
-                      className={`block w-full py-3 text-center text-xs font-bold uppercase tracking-widest rounded-sm transition-colors ${
+                      className={`block w-full py-3 text-center text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-300 ${
                         member.available_for_freelance 
-                          ? 'bg-white border border-accentBlue text-accentBlue hover:bg-accentBlue hover:text-white' 
-                          : 'bg-matteBlack text-white hover:bg-accentBlue hover:text-matteBlack'
+                          ? 'bg-white border border-accentBlue text-accentBlue hover:bg-accentBlue hover:text-white shadow-sm' 
+                          : 'bg-transparent border border-matteBlack/20 text-matteBlack hover:border-matteBlack hover:bg-matteBlack/5'
                       }`}
                     >
                       {member.available_for_freelance ? 'Hire for Consulting' : `Contact ${member.name.split(' ')[0]}`}
                     </a>
+
                   </div>
                 </div>
               ))}

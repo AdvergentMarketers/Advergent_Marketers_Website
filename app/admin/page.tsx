@@ -198,8 +198,20 @@ export default function AdminDashboard() {
                               <span className="px-2 py-1 bg-matteBlack/10 text-matteBlack/60 rounded-sm text-[10px] uppercase tracking-widest font-bold">Internal</span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-right">
-                            <Link href={`/admin/edit-member/${member.id}`} className="text-matteBlack/50 hover:text-accentBlue font-bold text-xs uppercase tracking-widest transition-colors">Edit Profile</Link>
+                          <td className="px-6 py-4 text-right space-x-4 flex items-center justify-end">
+                            <Link 
+                              href={`/admin/portfolio-builder/${member.id}`} 
+                              className="text-accentBlue hover:text-matteBlack font-bold text-xs uppercase tracking-widest transition-colors flex items-center gap-1"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                              Open Canvas
+                            </Link>
+                            <Link 
+                              href={`/admin/edit-member/${member.id}`} 
+                              className="text-matteBlack/50 hover:text-accentBlue font-bold text-xs uppercase tracking-widest transition-colors"
+                            >
+                              Edit Profile
+                            </Link>
                           </td>
                         </tr>
                       ))}

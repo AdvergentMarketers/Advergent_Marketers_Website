@@ -18,6 +18,7 @@ const config: Config = {
         offWhite: "#F7F7F8",
         matteBlack: "#1C1C1C",
         accentBlue: "#0055FF",
+        accentRed: '#EF4444',
       },
       fontFamily: {
         sans: ['var(--font-montserrat)', 'sans-serif'],

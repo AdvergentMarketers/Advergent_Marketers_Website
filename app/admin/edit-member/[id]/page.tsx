@@ -16,12 +16,20 @@ export default function EditMemberPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
 
+  // 1. STATE DECLARED AT THE TOP LEVEL
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     designation: "",
     specialization: "",
     experience_details: "",
+    bio: "",
+    portfolio_url: "",
+    linkedin_url: "",
+    twitter_url: "",
+    github_url: "",
+    brands_worked_with: "",
+    software_stack: "",
     certifications: "",
     years_experience: 0,
     priority: 10,
@@ -29,7 +37,7 @@ export default function EditMemberPage() {
     image_url: ""
   });
 
-  // Fetch the existing member data
+  // 2. USE-EFFECT PULLS THE DATA AND UPDATES THE STATE
   useEffect(() => {
     const fetchMember = async () => {
       const { data, error } = await supabase
@@ -39,12 +47,21 @@ export default function EditMemberPage() {
         .single();
 
       if (data) {
+        // Notice there is NO "const [formData, setFormData] = useState" here.
+        // We are just calling the setter function.
         setFormData({
           name: data.name || "",
           email: data.email || "",
           designation: data.designation || "",
           specialization: data.specialization || "",
           experience_details: data.experience_details || "",
+          bio: data.bio || "",
+          portfolio_url: data.portfolio_url || "",
+          linkedin_url: data.linkedin_url || "",
+          twitter_url: data.twitter_url || "",
+          github_url: data.github_url || "",
+          brands_worked_with: data.brands_worked_with || "",
+          software_stack: data.software_stack || "",
           certifications: data.certifications || "",
           years_experience: data.years_experience || 0,
           priority: data.priority || 10,
@@ -54,8 +71,11 @@ export default function EditMemberPage() {
       }
       setIsLoading(false);
     };
+    
     if (memberId) fetchMember();
   }, [memberId, supabase]);
+
+  // ... rest of your code (handleSave, handleDelete, and the return statement)
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,34 +172,75 @@ export default function EditMemberPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Work Experience Details</label>
-                <textarea rows={3} required value={formData.experience_details} onChange={e => setFormData({...formData, experience_details: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Work Experience (Brief for Homepage Card)</label>
+                <textarea rows={2} required value={formData.experience_details} onChange={e => setFormData({...formData, experience_details: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Years of Experience</label>
-                  <input type="number" required value={formData.years_experience} onChange={e => setFormData({...formData, years_experience: Number(e.target.value)})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" min="0" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Certifications & Licenses</label>
-                  <input type="text" value={formData.certifications} onChange={e => setFormData({...formData, certifications: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
-                </div>
-              </div>
+              {/* NEW: Dedicated Profile Page Data */}
+              <div className="pt-8 border-t border-matteBlack/10">
+                <h3 className="text-xl font-extrabold text-matteBlack mb-6 flex items-center gap-3">
+                  <span className="w-4 h-[2px] bg-accentBlue"></span> Dedicated Profile Data
+                </h3>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Full Biography</label>
+                    <textarea rows={4} value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold leading-relaxed" />
+                  </div>
 
-              <div className="flex items-center gap-6 p-6 bg-offWhite rounded-xl border border-matteBlack/10">
-                <div className="flex-1">
-                  <h4 className="text-sm font-bold text-matteBlack">Available for Freelance / Consulting?</h4>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" checked={formData.available_for_freelance} onChange={e => setFormData({...formData, available_for_freelance: e.target.checked})} />
-                  <div className="w-11 h-6 bg-matteBlack/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accentBlue"></div>
-                </label>
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Brands Worked With (Comma Separated)</label>
+                      <input type="text" value={formData.brands_worked_with} onChange={e => setFormData({...formData, brands_worked_with: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Software Stack (Comma Separated)</label>
+                      <input type="text" value={formData.software_stack} onChange={e => setFormData({...formData, software_stack: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                  </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Portrait Image Path</label>
-                <input type="text" value={formData.image_url} onChange={e => setFormData({...formData, image_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                    
+                    {/* NEW: Gateway to the Internal Canvas Builder */}
+                    <div className="flex flex-col justify-end">
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Internal Portfolio Engine</label>
+                      <Link 
+                        href={`/admin/portfolio-builder/${memberId}`}
+                        className="w-full flex items-center justify-between px-4 py-3 bg-matteBlack text-white rounded-md hover:bg-accentBlue transition-colors group shadow-sm"
+                      >
+                        <span className="text-sm font-extrabold uppercase tracking-widest">Launch Canvas Builder</span>
+                        <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                      </Link>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">GitHub / Behance URL</label>
+                      <input type="url" value={formData.github_url} onChange={e => setFormData({...formData, github_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">LinkedIn URL</label>
+                      <input type="url" value={formData.linkedin_url} onChange={e => setFormData({...formData, linkedin_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">X (Twitter) URL</label>
+                      <input type="url" value={formData.twitter_url} onChange={e => setFormData({...formData, twitter_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                  </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">GitHub / Behance URL</label>
+                      <input type="url" value={formData.github_url} onChange={e => setFormData({...formData, github_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">LinkedIn URL</label>
+                      <input type="url" value={formData.linkedin_url} onChange={e => setFormData({...formData, linkedin_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">X (Twitter) URL</label>
+                      <input type="url" value={formData.twitter_url} onChange={e => setFormData({...formData, twitter_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="pt-8 mt-8 border-t border-matteBlack/10">

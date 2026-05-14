@@ -4,6 +4,8 @@ import HeroBlock from "./blocks/HeroBlock";
 import MasonryGridBlock from "./blocks/MasonryGridBlock";
 import StandardGridBlock from "./blocks/StandardGridBlock";
 import CinematicFadeBlock from "./blocks/CinematicFadeBlock";
+import VideoEmbedBlock from "./blocks/VideoEmbedBlock";
+import ReelEmbedBlock from "./blocks/ReelEmbedBlock";
 
 type AccentTheme = "blue" | "red";
 
@@ -12,7 +14,9 @@ type PortfolioBlock =
   | { type: "hero"; id: string; imageUrl: string; title: string; subtitle: string; accentTheme: AccentTheme }
   | { type: "masonry"; id: string; categoryName: string; images: string[]; accentTheme: AccentTheme }
   | { type: "standard_grid"; id: string; categoryName: string; columns: 2 | 3; images: string[]; accentTheme: AccentTheme }
-  | { type: "cinematic_fade"; id: string; imageUrl: string; title: string; descriptionType?: "points" | "paragraph"; features: string[]; paragraphText?: string; accentTheme: AccentTheme };
+  | { type: "cinematic_fade"; id: string; imageUrl: string; title: string; descriptionType?: "points" | "paragraph"; features: string[]; paragraphText?: string; accentTheme: AccentTheme }
+  | { type: "video_embed"; id: string; videoUrl: string; title: string; accentTheme: AccentTheme } // <-- THIS FIXES THE ERROR!
+  | { type: "reel_embed"; id: string; videoUrls: string[]; title: string; accentTheme: AccentTheme };
 
 type PortfolioData = {
   template_type: string;
@@ -76,6 +80,26 @@ export default function PortfolioRenderer({ portfolioJson }: { portfolioJson: Po
               descriptionType={block.descriptionType} 
               features={block.features} 
               paragraphText={block.paragraphText} 
+              accentTheme={block.accentTheme} 
+            />
+          );
+        }
+        if (block.type === "video_embed") {
+          return (
+            <VideoEmbedBlock 
+              key={block.id} 
+              videoUrl={block.videoUrl} 
+              title={block.title} 
+              accentTheme={block.accentTheme} 
+            />
+          );
+        }
+        if (block.type === "reel_embed") {
+          return (
+            <ReelEmbedBlock 
+              key={block.id} 
+              videoUrls={block.videoUrls} 
+              title={block.title} 
               accentTheme={block.accentTheme} 
             />
           );

@@ -47,7 +47,13 @@ export default async function TeamMemberProfile({ params }: { params: Promise<{ 
   // Parse comma-separated strings into arrays for beautiful rendering
   const softwareStack = member.software_stack ? member.software_stack.split(",").map((s: string) => s.trim()) : [];
   const brandsWorkedWith = member.brands_worked_with ? member.brands_worked_with.split(",").map((s: string) => s.trim()) : [];
-
+  
+  // NEW: Smart Portfolio Detection (Handles both old single arrays and new Multi-Vault structures)
+  const hasPortfolio = member.portfolio_data && (
+    (member.portfolio_data.blocks && member.portfolio_data.blocks.length > 0) || 
+    Object.values(member.portfolio_data).some((vault: any) => vault?.blocks && vault.blocks.length > 0)
+  );
+  
   return (
     <main className="relative w-full min-h-screen bg-offWhite pt-24 pb-32">
       <div className="max-w-[1500px] mx-auto px-2 sm:px-4 md:px-6">
@@ -138,8 +144,8 @@ export default async function TeamMemberProfile({ params }: { params: Promise<{ 
                   </a>
                 )}
                 
-                {/* Dynamically Links to the Internal Portfolio Engine (Only shows if they built one!) */}
-                {member.portfolio_data && member.portfolio_data.blocks && member.portfolio_data.blocks.length > 0 && (
+                {/* Dynamically Links to the Internal Portfolio Engine */}
+                {hasPortfolio && (
                   <Link 
                     href={`/team/${member.id}/portfolio`}
                     className="px-8 py-4 bg-white border border-matteBlack/20 text-matteBlack text-xs font-bold uppercase tracking-widest rounded-sm hover:border-matteBlack transition-all shadow-sm"

@@ -1,132 +1,159 @@
 import Link from "next/link";
-import { FadeIn } from "../../components/ui/MotionWrapper"; // Adjust path if needed
 
-export const metadata = {
-  title: "Our Mechanisms | Advergent Marketers",
-  description: "High-conversion digital architectures and growth ecosystems.",
-};
-
-export default function ServicesPage() {
-  const pillars = [
-    {
-      id: "01",
-      title: "Paid Media & Acquisition",
-      oneLiner: "We don't buy clicks; we engineer profitable customer acquisition at scale.",
-      description: "Data-driven traffic generation designed to lower Customer Acquisition Cost (CAC) and maximize bottom-line ROI.",
-      services: ["Performance Marketing", "Meta Ads (A/B Testing)", "Google Ads (SEM)", "Search Engine Optimization (SEO)"],
-      deliverables: ["Dynamic ROAS Optimization", "Granular Audience Targeting", "Algorithmic Bidding Strategies", "Technical SEO Audits"],
-    },
-    {
-      id: "02",
-      title: "Creative & Brand Identity",
-      oneLiner: "Scroll-stopping creative rooted in psychological conversion principles.",
-      description: "We build visual ecosystems that position your brand as an undisputed premium authority in your specific niche.",
-      services: ["Comprehensive Branding", "Cinematic Video Editing", "High-End Graphic Design", "Logo & Identity Design"],
-      deliverables: ["Direct-Response Video Ads", "Visual Identity Systems", "Rapid Creative Testing Frameworks", "Conversion-Optimized Posters"],
-    },
-    {
-      id: "03",
-      title: "Digital Infrastructure",
-      oneLiner: "High-performance digital real estate designed to convert attention into capital.",
-      description: "From custom-coded web applications to daily audience nurturing, we build the foundations your traffic lands on.",
-      services: ["Custom Web Dev (MERN)", "E-Commerce (Shopify/Woo)", "CMS Sites (Wix/WordPress)", "Social Media Management"],
-      deliverables: ["Lightning-Fast Page Speeds", "Frictionless UI/UX", "Community Cultivation", "Strategic Content Calendars"],
-    }
-  ];
-
+export default function ServicesShowcase() {
   return (
-    <div className="min-h-screen bg-offWhite pt-24 pb-32">
+    <div className="min-h-screen bg-offWhite text-matteBlack selection:bg-accentBlue selection:text-white pb-24">
       
-      {/* THE MANIFESTO HERO */}
-      <header className="px-6 sm:px-8 lg:px-12 max-w-5xl mx-auto mb-32 text-center md:text-left">
-        <FadeIn>
-          <span className="text-accentBlue font-bold tracking-widest uppercase text-sm mb-6 block">
-            Our Philosophy
+      {/* SECTION 1: HERO */}
+      <section className="pt-32 pb-20 px-6 lg:px-12 max-w-7xl mx-auto text-center space-y-6">
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight uppercase">
+          End-to-End <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-accentBlue to-blue-600">
+            Digital Execution.
           </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-matteBlack tracking-tight leading-tight mb-10">
-            Marketing is not an expense. <br className="hidden md:block" />
-            <span className="text-matteBlack/40">It is an engineered ecosystem.</span>
-          </h1>
-          <div className="w-20 h-1 bg-accentBlue mb-10 mx-auto md:mx-0"></div>
-          <p className="text-xl md:text-2xl text-matteBlack/80 leading-relaxed font-medium max-w-3xl">
-            At Advergent Marketers, we reject vanity metrics and superficial aesthetics. We build high-conversion digital architectures that turn raw attention into measurable, scalable revenue.
-          </p>
-        </FadeIn>
-      </header>
+        </h1>
+        <p className="text-lg md:text-xl font-semibold text-matteBlack/60 max-w-2xl mx-auto">
+          From pure branding to conversion-heavy e-commerce. We operate on strict project milestones, transparent pricing, and relentless quality.
+        </p>
+      </section>
 
-      {/* THE PILLARS */}
-      <div className="px-6 sm:px-8 lg:px-12 max-w-7xl mx-auto space-y-24">
-        {pillars.map((pillar, index) => (
-          <FadeIn key={pillar.id}>
-            <div className="group bg-white rounded-3xl p-8 md:p-16 border border-matteBlack/5 shadow-sm hover:shadow-2xl transition-all duration-700 relative overflow-hidden">
-              
-              {/* Background Accent Number */}
-              <div className="absolute -right-8 -top-12 text-[15rem] font-extrabold text-matteBlack/[0.02] pointer-events-none transition-transform duration-700 group-hover:scale-110">
-                {pillar.id}
-              </div>
+      {/* SECTION 2: INDIVIDUAL SERVICES (A La Carte) */}
+      <section className="px-6 lg:px-12 max-w-7xl mx-auto py-16">
+        <div className="flex items-center gap-4 border-b border-matteBlack/10 pb-4 mb-12">
+          <span className="w-3 h-[2px] bg-accentBlue" />
+          <h3 className="text-xl font-extrabold uppercase tracking-widest">Individual Services</h3>
+        </div>
 
-              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-                
-                {/* Left Column: Vision */}
-                <div>
-                  <span className="inline-block px-4 py-2 bg-matteBlack text-accentBlue text-xs font-bold uppercase tracking-widest rounded-full mb-6">
-                    Pillar {pillar.id}
-                  </span>
-                  <h2 className="text-4xl md:text-5xl font-extrabold text-matteBlack tracking-tight mb-6">
-                    {pillar.title}
-                  </h2>
-                  <p className="text-2xl text-matteBlack/90 font-medium mb-4 leading-snug">
-                    {pillar.oneLiner}
-                  </p>
-                  <p className="text-matteBlack/60 leading-relaxed">
-                    {pillar.description}
-                  </p>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ServiceCard 
+            title="Video Editing" 
+            desc="Podcasts, dynamic reels, and high-end SaaS UI motion graphics." 
+            startingPrice="₹1,000 / min" 
+          />
+          <ServiceCard 
+            title="Graphic Design" 
+            desc="Minimalist posters, 5-slide carousels, and premium 3D manipulations." 
+            startingPrice="₹1,000 / graphic" 
+          />
+          <ServiceCard 
+            title="UI/UX Design" 
+            desc="Wireframes, high-fidelity visual design, and interactive Figma prototypes." 
+            startingPrice="₹1,000 / screen" 
+          />
+          <ServiceCard 
+            title="Website Development" 
+            desc="Custom Node.js stacks, robust Shopify e-commerce, and WordPress." 
+            startingPrice="₹1,000 / page" 
+          />
+          <ServiceCard 
+            title="Brand Identity" 
+            desc="Combination logos, wordmarks, pictorials, and full brand guidelines." 
+            startingPrice="₹3,000 / logo" 
+          />
+          <ServiceCard 
+            title="Amazon Optimization" 
+            desc="Basic listing setups and Premium A+ Enhanced Brand Content." 
+            startingPrice="₹1,000 / product" 
+          />
+        </div>
+      </section>
 
-                {/* Right Column: Execution */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:pt-16">
-                  <div>
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-matteBlack/40 mb-4 flex items-center gap-2">
-                      <span className="w-4 h-[2px] bg-accentBlue"></span> Core Services
-                    </h3>
-                    <ul className="space-y-3">
-                      {pillar.services.map((service, i) => (
-                        <li key={i} className="text-matteBlack font-bold text-sm md:text-base">
-                          {service}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-matteBlack/40 mb-4 flex items-center gap-2">
-                      <span className="w-4 h-[2px] bg-red-500"></span> Deliverables
-                    </h3>
-                    <ul className="space-y-3">
-                      {pillar.deliverables.map((deliv, i) => (
-                        <li key={i} className="text-matteBlack/70 font-medium text-sm md:text-base">
-                          — {deliv}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+      {/* SECTION 3: BUNDLED SERVICES */}
+      <section className="px-6 lg:px-12 max-w-7xl mx-auto py-16">
+        <div className="flex items-center gap-4 border-b border-matteBlack/10 pb-4 mb-12">
+          <span className="w-3 h-[2px] bg-red-500" />
+          <h3 className="text-xl font-extrabold uppercase tracking-widest">Agency Packages</h3>
+        </div>
 
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Bundle 1: Brand Setup */}
+          <div className="p-8 md:p-12 bg-white border border-matteBlack/10 rounded-2xl shadow-xl hover:border-accentBlue transition-colors relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-matteBlack text-white text-[10px] font-extrabold uppercase tracking-widest px-4 py-2 rounded-bl-xl">
+              One-Time Project
             </div>
-          </FadeIn>
-        ))}
-      </div>
+            <h4 className="text-3xl font-extrabold uppercase tracking-tight mb-2">The Complete Brand Setup</h4>
+            <p className="text-sm font-semibold text-matteBlack/50 mb-8">Complete brand creation from zero to launch.</p>
+            
+            <ul className="space-y-4 mb-12 font-semibold text-sm">
+              <li className="flex items-center gap-3"><CheckIcon /> Professional Logo Design</li>
+              <li className="flex items-center gap-3"><CheckIcon /> Full Brand Guidelines</li>
+              <li className="flex items-center gap-3"><CheckIcon /> 10 Launch Graphics / Posters</li>
+              <li className="flex items-center gap-3 text-matteBlack/50">Upgrade available for E-Commerce & Reels</li>
+            </ul>
+            
+            <Link href="/estimate" className="block text-center w-full py-4 bg-offWhite border border-matteBlack/10 text-matteBlack text-xs font-extrabold uppercase tracking-widest rounded hover:bg-matteBlack hover:text-white transition-all">
+              Configure & Price
+            </Link>
+          </div>
 
-      {/* FOOTER CTA */}
-      <FadeIn>
-        <div className="mt-32 text-center px-6">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-matteBlack mb-8">Ready to scale your ecosystem?</h2>
-          <Link href="/contact" className="inline-block px-10 py-5 bg-accentBlue text-matteBlack text-lg font-extrabold uppercase tracking-widest rounded-sm hover:scale-105 transition-transform duration-300 shadow-xl">
-            Apply for a Strategy Session
+          {/* Bundle 2: Social Media */}
+          <div className="p-8 md:p-12 bg-matteBlack text-white rounded-2xl shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-accentBlue text-white text-[10px] font-extrabold uppercase tracking-widest px-4 py-2 rounded-bl-xl">
+              Monthly Retainer
+            </div>
+            <h4 className="text-3xl font-extrabold uppercase tracking-tight mb-2">Monthly Social Media Management</h4>
+            <p className="text-sm font-semibold text-white/50 mb-8">Outsourced marketing. We manage your content.</p>
+            
+            <ul className="space-y-4 mb-12 font-semibold text-sm text-white/80">
+              <li className="flex items-center gap-3"><CheckIcon color="text-accentBlue" /> 4 to 8 Dynamic Reels per month</li>
+              <li className="flex items-center gap-3"><CheckIcon color="text-accentBlue" /> 12 to 20 Premium Posters</li>
+              <li className="flex items-center gap-3"><CheckIcon color="text-accentBlue" /> Meta & Google Ads Management</li>
+              <li className="flex items-center gap-3"><CheckIcon color="text-accentBlue" /> Weekly Analytics Reporting</li>
+            </ul>
+            
+            <Link href="/estimate" className="block text-center w-full py-4 bg-accentBlue text-white text-xs font-extrabold uppercase tracking-widest rounded hover:opacity-90 transition-all shadow-lg">
+              Configure & Price
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4: CUSTOM ESTIMATE CTA */}
+      <section className="px-6 lg:px-12 max-w-5xl mx-auto py-24">
+        <div className="bg-gradient-to-br from-matteBlack to-gray-900 rounded-[2rem] p-12 md:p-20 text-center shadow-2xl">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white uppercase tracking-tight mb-6">
+            Need a Specific Solution?
+          </h2>
+          <p className="text-lg font-semibold text-white/70 mb-10 max-w-2xl mx-auto">
+            Use our interactive pricing engine to build a custom scope of work tailored exactly to your brand's requirements. Get a live estimate instantly.
+          </p>
+          <Link 
+            href="/estimate" 
+            className="inline-block px-12 py-5 bg-white text-matteBlack text-sm font-extrabold uppercase tracking-widest rounded shadow-xl hover:bg-accentBlue hover:text-white transition-all duration-300"
+          >
+            Get Estimate Pricing
           </Link>
         </div>
-      </FadeIn>
+      </section>
 
+      {/* THE 95% DISCLAIMER */}
+      <section className="px-6 max-w-3xl mx-auto text-center pb-12 opacity-60">
+        <p className="text-[10px] font-bold uppercase tracking-widest leading-relaxed">
+          * Note: All prices generated by our interactive estimator are 95% accurate baseline estimates. Final project scoping, custom add-ons, and technical requirements may slightly adjust the final quote. You must contact our team and sign an official SOW (Scope of Work) to lock in your pricing.
+        </p>
+      </section>
     </div>
+  );
+}
+
+// Reusable UI Components
+function ServiceCard({ title, desc, startingPrice }: { title: string, desc: string, startingPrice: string }) {
+  return (
+    <div className="group p-8 bg-white border border-matteBlack/5 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+      <h4 className="text-lg font-extrabold uppercase tracking-widest mb-3 group-hover:text-accentBlue transition-colors">{title}</h4>
+      <p className="text-sm font-semibold text-matteBlack/60 mb-6 line-clamp-2">{desc}</p>
+      <div className="flex items-center justify-between border-t border-matteBlack/5 pt-4">
+        <span className="text-[10px] font-extrabold uppercase tracking-widest text-matteBlack/40">Starting At</span>
+        <span className="text-sm font-extrabold">{startingPrice}</span>
+      </div>
+    </div>
+  );
+}
+
+function CheckIcon({ color = "text-matteBlack" }: { color?: string }) {
+  return (
+    <svg className={`w-4 h-4 ${color}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+    </svg>
   );
 }

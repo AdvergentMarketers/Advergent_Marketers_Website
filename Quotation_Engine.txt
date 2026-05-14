@@ -1,0 +1,35 @@
+Phase 1: The Engine Room (Database & State)
+Before we draw any UI on the screen, we must establish the brain of the operation.
+
+Create the pricing_config Table: Set up your Supabase database to hold the base prices, complexity multipliers, and volume discount rules we just defined.
+
+Build the Global State: Create a React Context or Zustand store to hold the user's selections as they click through the app. This ensures the Left Desk (inputs) and the Right Desk (receipt) are always perfectly in sync.
+
+Write the Math Functions: Code the pure TypeScript utility functions that fetch the database numbers and calculate the Line Item Total and Bundle Discounts.
+
+Phase 2: The Service Showcase (/services)
+We build the static marketing front-end to establish the visual standard.
+
+The UI Grid: Build the A La Carte masonry layout and the Case Study modals.
+
+The Bundle Cards: Code the three massive retainer tiers (Genesis, Omnichannel, etc.) with their flat pricing.
+
+The Router: Wire up the "Build Your Custom Estimate" buttons to correctly transition the user to the estimator tool.
+
+Phase 3: The Interactive Configurator (/estimate)
+This is the heavy lifting where we build the "Apple-Style" interface.
+
+The Left Desk (Inputs): Build the accordion menus, the complexity toggle cards (with the video loops/images), and the volume sliders.
+
+The Right Desk (Receipt): Build the floating, sticky glass-morphism receipt that maps over the Global State and displays the live math.
+
+The 5% Trigger: Code the logic that detects when a user crosses the threshold into a "Bundle" and dynamically renders the strike-through discount animation on the receipt.
+
+Phase 4: Lead Capture & The PDF Pipeline
+The final phase locks in the sale and delivers the asset.
+
+The Capture Modal: Build the popup that triggers when they click "Get This Exact Proposal," asking for Name, Company, and Email.
+
+The API Route: Write the Next.js backend endpoint that accepts the calculator data and passes it to the PDF generation script (which you are building in your other chat).
+
+The Handshake: Connect the two systems so that clicking submit generates the PDF, sends it to the client, and notifies you of the new lead.

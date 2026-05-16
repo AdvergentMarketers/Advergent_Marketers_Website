@@ -6,10 +6,13 @@ import { FadeIn } from "../../components/ui/MotionWrapper";
 import { createClient } from "../../lib/supabase";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<"clients" | "portfolio" | "roster">("clients");
+  // 1. Added "services" to the active tab state
+  const [activeTab, setActiveTab] = useState<"clients" | "portfolio" | "roster" | "services">("clients");
   const [caseStudies, setCaseStudies] = useState<any[]>([]);
   const [clients, setClients] = useState<any[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  // 2. Added state to hold the pricing configurations
+  const [services, setServices] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const supabase = createClient();
@@ -17,16 +20,18 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       setIsLoading(true);
-      // Fetch Case Studies, Active Clients, and Team Roster simultaneously
-      const [portfolioRes, clientsRes, teamRes] = await Promise.all([
+      // 3. Added the pricing_config fetch to the Promise.all array
+      const [portfolioRes, clientsRes, teamRes, servicesRes] = await Promise.all([
         supabase.from("case_studies").select("id, client_name, hero_metric, is_active").order("created_at", { ascending: false }),
         supabase.from("clients").select("id, client_name, company_name, contact_email, account_balance, is_active").order("created_at", { ascending: false }),
-        supabase.from("team_members").select("id, name, designation, email, priority, available_for_freelance").order("priority", { ascending: true })
+        supabase.from("team_members").select("id, name, designation, email, priority, available_for_freelance").order("priority", { ascending: true }),
+        supabase.from("pricing_config").select("id, display_name, category_slug, base_price, base_unit").order("display_name", { ascending: true })
       ]);
 
       if (portfolioRes.data) setCaseStudies(portfolioRes.data);
       if (clientsRes.data) setClients(clientsRes.data);
       if (teamRes.data) setTeamMembers(teamRes.data);
+      if (servicesRes.data) setServices(servicesRes.data);
       
       setIsLoading(false);
     };
@@ -63,36 +68,57 @@ export default function AdminDashboard() {
                 >
                   Team Roster
                 </button>
+                {/* NEW TAB: Services & Pricing */}
+                <button 
+                  onClick={() => setActiveTab("services")}
+                  className={`text-sm font-bold uppercase tracking-widest pb-4 -mb-[17px] transition-colors ${activeTab === "services" ? "text-accentBlue border-b-2 border-accentBlue" : "text-matteBlack/40 hover:text-matteBlack"}`}
+                >
+                  Services & Pricing
+                </button>
               </div>
               
-              {/* Dynamic Action Button based on the active tab */}
-              {activeTab === "portfolio" && (
-                <Link href="/admin/add-case-study" className="px-6 py-2 bg-matteBlack text-white font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
-                  + New Case Study
-                </Link>
-              )}
-              {activeTab === "clients" && (
-                <Link href="/admin/add-client" className="px-6 py-2 bg-accentBlue text-matteBlack font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
-                  + Onboard Client
-                </Link>
-              )}
-              
-              {activeTab === "roster" && (
-                <Link href="/admin/add-member" className="px-6 py-2 bg-matteBlack text-white font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
-                  + Add Team Member
-                </Link>
-              )}
-              <button 
-             onClick={async () => {
-                const { createClient } = await import("../../lib/supabase");
-                const supabase = createClient();
-                await supabase.auth.signOut();
-                window.location.href = '/auth';
-              }} 
-              className="px-6 py-2 bg-white border border-matteBlack/10 text-matteBlack font-bold rounded-md text-xs uppercase tracking-widest hover:border-matteBlack/30 transition shadow-sm text-center"
-              >
-                Sign Out
-              </button>
+              {/* Dynamic Action Buttons based on the active tab */}
+              <div className="flex flex-wrap gap-3">
+                {activeTab === "portfolio" && (
+                  <Link href="/admin/add-case-study" className="px-6 py-2 bg-matteBlack text-white font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
+                    + New Case Study
+                  </Link>
+                )}
+                {activeTab === "clients" && (
+                  <Link href="/admin/add-client" className="px-6 py-2 bg-accentBlue text-white font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
+                    + Onboard Client
+                  </Link>
+                )}
+                {activeTab === "roster" && (
+                  <Link href="/admin/add-member" className="px-6 py-2 bg-matteBlack text-white font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
+                    + Add Team Member
+                  </Link>
+                )}
+                
+                {/* NEW ACTION BUTTONS: Services & Media */}
+                {activeTab === "services" && (
+                  <>
+                    <Link href="/admin/media" className="px-6 py-2 bg-white border border-matteBlack/10 text-matteBlack font-bold rounded-md text-xs uppercase tracking-widest hover:border-matteBlack/30 transition shadow-sm text-center">
+                      Manage Media
+                    </Link>
+                    <Link href="/admin/services" className="px-6 py-2 bg-accentBlue text-white font-bold rounded-md text-xs uppercase tracking-widest hover:opacity-90 transition shadow-sm text-center">
+                      + New Service
+                    </Link>
+                  </>
+                )}
+
+                <button 
+                  onClick={async () => {
+                    const { createClient } = await import("../../lib/supabase");
+                    const supabase = createClient();
+                    await supabase.auth.signOut();
+                    window.location.href = '/auth';
+                  }} 
+                  className="px-6 py-2 bg-white border border-matteBlack/10 text-red-500 font-bold rounded-md text-xs uppercase tracking-widest hover:border-red-500/50 hover:bg-red-50 transition shadow-sm text-center"
+                >
+                  Sign Out
+                </button>
+              </div>
             </div>
           </div>
 
@@ -221,13 +247,52 @@ export default function AdminDashboard() {
                     </tbody>
                   </table>
                 )}
-                
+
+                {/* TAB 4: SERVICES & PRICING VIEW */}
+                {activeTab === "services" && (
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-matteBlack/5 border-b border-matteBlack/10 text-matteBlack/60 uppercase tracking-wider font-bold text-xs">
+                      <tr>
+                        <th className="px-6 py-4">Service Module</th>
+                        <th className="px-6 py-4">System ID (Slug)</th>
+                        <th className="px-6 py-4">Base Config</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-matteBlack/5">
+                      {services.map((service) => (
+                        <tr key={service.id} className="hover:bg-offWhite transition-colors">
+                          <td className="px-6 py-4 font-bold text-matteBlack text-base">{service.display_name}</td>
+                          <td className="px-6 py-4">
+                            <span className="bg-matteBlack/5 text-matteBlack/60 px-2 py-1 rounded font-mono text-[10px]">
+                              {service.category_slug}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-bold text-matteBlack">₹{service.base_price.toLocaleString()}</span>
+                            <span className="text-xs text-matteBlack/50 ml-1">/ {service.base_unit}</span>
+                          </td>
+                          <td className="px-6 py-4 text-right space-x-4">
+                            <Link href={`/admin/services/edit/${service.id}`} className="text-matteBlack/50 hover:text-accentBlue font-bold text-xs uppercase tracking-widest transition-colors">
+                              Edit
+                            </Link>
+                            <Link href="/admin/media" className="text-matteBlack/50 hover:text-accentBlue font-bold text-xs uppercase tracking-widest transition-colors">
+                              Media
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                      {services.length === 0 && (
+                        <tr><td colSpan={4} className="px-6 py-12 text-center text-matteBlack/50">No services configured. Deploy your first one!</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                )}
+
               </div>
            </div>
-           
           )}
         </FadeIn>
-        
       </div>
     </div>
   );

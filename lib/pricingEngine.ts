@@ -20,8 +20,11 @@ export interface PricingConfig {
   base_unit: string;
   complexities: Record<string, ComplexityData>;
   custom_rules?: {
-    volume_threshold: number;
-    discounted_base_rate: number;
+    volume_threshold?: number;
+    discounted_base_rate?: number;
+    has_video_slider?: boolean;     // NEW: Dynamic UI flag
+    has_variant_slider?: boolean;   // NEW: Dynamic UI flag
+    has_seo_addon?: boolean;        // NEW: Dynamic UI flag
   } | null;
 }
 
@@ -55,32 +58,46 @@ export function calculateLineItem(
   const videoCount = addons?.videoCount || 1;
   const variants = addons?.variants || 1;
 
-  // 1. Fixed Package Pricing (For Websites)
+  // 1. Fixed Package Pricing (For Websites, Branding/Logos)
   if (complexityData.fixed_base_price !== undefined) {
-    itemTotal += complexityData.fixed_base_price;
     
-    // Website total units = products * variants
-    const effectiveWebUnits = quantity * variants;
-    const included = complexityData.included_units || 1;
-    
-    if (effectiveWebUnits > included && complexityData.extra_unit_price) {
-      itemTotal += (effectiveWebUnits - included) * complexityData.extra_unit_price;
+    // SCENARIO A: It is a "Package" with included units (e.g., Service Websites)
+    if (complexityData.included_units !== undefined) {
+      itemTotal += complexityData.fixed_base_price;
+      
+      const effectiveWebUnits = quantity * variants;
+      if (effectiveWebUnits > complexityData.included_units && complexityData.extra_unit_price) {
+        itemTotal += (effectiveWebUnits - complexityData.included_units) * complexityData.extra_unit_price;
+      }
+    } 
+    // SCENARIO B: It is a flat-rate per item (e.g., Logos & Branding)
+    else {
+      let effectiveQuantity = quantity;
+      
+      // FIX: Force the Fixed Price to respect your Admin UI Sliders!
+      if (config.custom_rules?.has_video_slider) effectiveQuantity = quantity * videoCount;
+      if (config.custom_rules?.has_variant_slider) effectiveQuantity = quantity * variants;
+
+      itemTotal += complexityData.fixed_base_price * effectiveQuantity;
     }
+    
   } 
-  // 2. Standard Multiplier Pricing (For Video, Graphics, UI/UX, Amazon)
+  // 2. Standard Multiplier Pricing (For Video, Graphics, UI/UX, Amazon, etc.)
   else {
     let effectiveQuantity = quantity;
-    if (config.category_slug === 'video_editing') effectiveQuantity = quantity * videoCount;
-    if (config.category_slug === 'amazon_listing') effectiveQuantity = quantity * variants;
+    
+    // Dynamic check instead of hardcoded category slug
+    if (config.custom_rules?.has_video_slider) effectiveQuantity = quantity * videoCount;
+    if (config.custom_rules?.has_variant_slider) effectiveQuantity = quantity * variants;
 
     let activeBasePrice = config.base_price;
     let volumeDiscountMultiplier = 1.0;
     
-    // Check for custom rules (like Video Editing drops to 800)
-    if (config.custom_rules && effectiveQuantity >= config.custom_rules.volume_threshold) {
-      activeBasePrice = config.custom_rules.discounted_base_rate;
+    // Check for custom rules (like a specific service volume threshold override)
+    if (config.custom_rules && config.custom_rules.volume_threshold && effectiveQuantity >= config.custom_rules.volume_threshold) {
+      activeBasePrice = config.custom_rules.discounted_base_rate || config.base_price;
     } else {
-      // If no custom rule, apply the generic volume tier discount
+      // If no custom rule override, apply the generic volume tier discount
       const discountPercentage = getGlobalVolumeDiscount(effectiveQuantity);
       volumeDiscountMultiplier = 1 - discountPercentage;
     }

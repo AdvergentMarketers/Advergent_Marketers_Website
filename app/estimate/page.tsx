@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { useEstimatorStore } from "@/store/useEstimatorStore";
-import { pdf, PDFViewer } from '@react-pdf/renderer';
+
 import { ProposalPDF } from '@/components/ProposalPDF';
 import { calculateLineItem, applyBundleDiscount, PricingConfig, ServiceSelection } from "@/lib/pricingEngine";
+
 
 export default function InteractiveEstimator() {
   const supabase = createClient();
@@ -16,24 +17,33 @@ export default function InteractiveEstimator() {
   const [previewData, setPreviewData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeModal, setActiveModal] = useState<PricingConfig | null>(null);
+  const [pdfBlobUrl, setPdfBlobUrl] = useState<string | null>(null);
   // NEW: Extracted download function so our Preview Screen button can trigger it
   const handleDownloadPDF = async () => {
     if (!previewData) return;
-    const blob = await pdf(
-      <ProposalPDF {...previewData} />
-    ).toBlob();
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Advergent_Proposal_${previewData.clientName.replace(/\s+/g, '_') || 'Estimate'}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
     
-    // Optional: Close everything after download, or let them stay on the preview screen
-    // setShowModal(false); 
-    // setPreviewData(null);
+    try {
+      // Dynamically import the generator only when the button is clicked
+      const { pdf } = await import('@react-pdf/renderer');
+      
+      const blob = await pdf(
+        <ProposalPDF {...previewData} />
+      ).toBlob();
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Advergent_Proposal_${previewData.clientName.replace(/\s+/g, '_') || 'Estimate'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up the memory
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("PDF Generation Error:", error);
+      alert("There was an issue generating your PDF. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -44,6 +54,27 @@ export default function InteractiveEstimator() {
     }
     getPricing();
   }, [supabase]);
+
+  // ✅ ADD THIS EFFECT
+  useEffect(() => {
+    if (previewData) {
+      setPdfBlobUrl(null); // Reset if re-generating
+      import('@react-pdf/renderer').then(({ pdf }) => {
+        pdf(<ProposalPDF {...previewData} />)
+          .toBlob()
+          .then((blob) => {
+            const url = URL.createObjectURL(blob);
+            setPdfBlobUrl(url);
+          })
+          .catch((err) => console.error("PDF Blob Error:", err));
+      });
+    }
+    
+    // Cleanup memory when modal closes
+    return () => {
+      if (pdfBlobUrl) URL.revokeObjectURL(pdfBlobUrl);
+    };
+  }, [previewData]);
 
   const subtotal = pricingData.reduce((acc, config) => {
     const selection = selections[config.category_slug];
@@ -261,7 +292,7 @@ export default function InteractiveEstimator() {
                     subtotal,
                     finalTotal,
                     isBundleUnlocked,
-                    // NEW: Dynamically grab the absolute URL of the PNG
+                    // This generates the absolute URL required by React-PDF
                     logoUrl: `${window.location.origin}/logo.png` 
                   });
                 }}
@@ -313,12 +344,19 @@ export default function InteractiveEstimator() {
                 </div>
               </div>
 
-              {/* The Actual PDF Viewer */}
+              {/* The Actual PDF Viewer (Bypassed with iFrame) */}
               <div className="flex-1 p-4 md:p-8 bg-matteBlack/5 overflow-hidden">
-                <div className="w-full h-full max-w-5xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden border border-matteBlack/10">
-                  <PDFViewer width="100%" height="100%" className="border-0">
-                    <ProposalPDF {...previewData} />
-                  </PDFViewer>
+                <div className="w-full h-full max-w-5xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden border border-matteBlack/10 relative">
+                  
+                  {!pdfBlobUrl ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white">
+                      <div className="w-10 h-10 border-4 border-matteBlack/10 border-t-accentBlue rounded-full animate-spin mb-4" />
+                      <p className="text-xs font-bold uppercase tracking-widest text-matteBlack/50 animate-pulse">Rendering Document Engine...</p>
+                    </div>
+                  ) : (
+                    <iframe src={`${pdfBlobUrl}#toolbar=0`} className="w-full h-full border-0" />
+                  )}
+
                 </div>
               </div>
 

@@ -1,22 +1,17 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 
-// 1. REGISTER THE RAW FONT FILES
-Font.register({
-  family: 'Montserrat',
-  fonts: [
-    { src: '/fonts/Montserrat-Regular.ttf' },
-    { src: '/fonts/Montserrat-Bold.ttf', fontWeight: 'bold' }
-  ]
-});
 
-// 2. APPLY THE FONT GLOBALLY
+// SAFTEY FIX 1: Removed Font.register to prevent missing .ttf file crashes. 
+// It will safely use the built-in default font for now.
+
 const styles = StyleSheet.create({
-  // Changed fontFamily from 'Helvetica' to 'Montserrat'
-  page: { backgroundColor: '#f8f9fa', padding: 40, fontFamily: 'Montserrat' },
+  page: { backgroundColor: '#f8f9fa', padding: 40 }, // Removed fontFamily
   
   header: { flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 2, borderBottomColor: '#1a1a1a', paddingBottom: 20, marginBottom: 40 },
-  logo: { width: 60, height: 'auto', objectFit: 'contain' },
+  
+  // Custom text-based logo style to replace the image
+  logo: { width: 40, height: 'auto', objectFit: 'contain' },
   
   documentTitle: { fontSize: 10, color: '#2563eb', textTransform: 'uppercase', letterSpacing: 2 },
   clientSection: { marginBottom: 40 },
@@ -45,16 +40,16 @@ const styles = StyleSheet.create({
   finalTotalValue: { fontSize: 18, fontWeight: 'bold', color: '#1a1a1a' },
   
   footer: { position: 'absolute', bottom: 40, left: 40, right: 40, textAlign: 'center' },
-  footerText: { fontSize: 8, color: '#1a1a1a', opacity: 0.5, marginBottom: 6 },
-  copyrightText: { fontSize: 7, color: '#666666', textTransform: 'uppercase', letterSpacing: 1 }
+  footerText: { fontSize: 8, color: '#999999', textAlign: 'center' },
+  copyrightText: { fontSize: 7, color: '#666666', textTransform: 'uppercase', letterSpacing: 1, marginTop: 4 }
 });
 
 export const ProposalPDF = ({ 
   clientName, 
   clientEmail, 
-  lineItems, 
-  subtotal, 
-  finalTotal, 
+  lineItems = [], // Added fallback empty array
+  subtotal = 0,   // Added fallback 0
+  finalTotal = 0, // Added fallback 0
   isBundleUnlocked,
   logoUrl
 }: any) => (
@@ -63,7 +58,12 @@ export const ProposalPDF = ({
       
       <View style={styles.header}>
         <View>
-          <Image src={logoUrl} style={styles.logo} />
+          {/* Ensure logoUrl is passed down from the page.tsx state */}
+          {logoUrl ? (
+             <Image src={logoUrl} style={styles.logo} />
+          ) : (
+             <Text style={{ fontSize: 18, fontWeight: 'extrabold', color: '#1a1a1a' }}>ADVERGENT</Text>
+          )}
         </View>
         <View style={{ alignItems: 'flex-end' }}>
           <Text style={styles.documentTitle}>Estimated Scope of Work</Text>
@@ -74,7 +74,8 @@ export const ProposalPDF = ({
       <View style={styles.clientSection}>
         <Text style={styles.label}>Prepared For</Text>
         <Text style={styles.value}>{clientName || 'Valued Client'}</Text>
-        <Text style={{ fontSize: 10, color: '#666', marginTop: 2 }}>{clientEmail || ''}</Text>
+        {/* Strict check for email to avoid rendering undefined strings */}
+        {clientEmail ? <Text style={{ fontSize: 10, color: '#666', marginTop: 2 }}>{clientEmail}</Text> : null}
       </View>
 
       <View style={styles.tableHeader}>
@@ -86,14 +87,15 @@ export const ProposalPDF = ({
       {lineItems.map((item: any, i: number) => (
         <View style={styles.row} key={i}>
           <View style={{ width: '50%' }}>
-            <Text style={styles.serviceTitle}>{item.title}</Text>
-            <Text style={styles.serviceDetail}>{item.complexityNiceName}</Text>
+            <Text style={styles.serviceTitle}>{item.title || 'Service'}</Text>
+            <Text style={styles.serviceDetail}>{item.complexityNiceName || 'Standard'}</Text>
             {item.addons && item.addons.seo && (
               <Text style={{ fontSize: 8, color: '#2563eb', marginTop: 4 }}>+ Advanced SEO Included</Text>
             )}
           </View>
-          <Text style={styles.col2}>{item.receiptLabel}</Text>
-          <Text style={styles.col3}>INR {item.cost.toLocaleString()}</Text>
+          <Text style={styles.col2}>{item.receiptLabel || '1'}</Text>
+          {/* Safely handle the cost number */}
+          <Text style={styles.col3}>INR {item.cost ? item.cost.toLocaleString() : '0'}</Text>
         </View>
       ))}
 

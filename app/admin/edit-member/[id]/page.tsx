@@ -176,7 +176,26 @@ export default function EditMemberPage() {
                 <textarea rows={2} required value={formData.experience_details} onChange={e => setFormData({...formData, experience_details: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
               </div>
 
-              {/* NEW: Dedicated Profile Page Data */}
+              {/* NEW: Image URL, Years of Experience, and Freelance Toggle */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Profile Image URL</label>
+                  <input type="text" value={formData.image_url} onChange={e => setFormData({...formData, image_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="/team/member.png" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Years of Experience</label>
+                  <input type="number" required value={formData.years_experience} onChange={e => setFormData({...formData, years_experience: Number(e.target.value)})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" min="0" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Freelance Availability</label>
+                  <select value={formData.available_for_freelance ? "true" : "false"} onChange={e => setFormData({...formData, available_for_freelance: e.target.value === "true"})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold">
+                    <option value="true">Yes, Available for overflow work</option>
+                    <option value="false">No, Not Available</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Dedicated Profile Page Data */}
               <div className="pt-8 border-t border-matteBlack/10">
                 <h3 className="text-xl font-extrabold text-matteBlack mb-6 flex items-center gap-3">
                   <span className="w-4 h-[2px] bg-accentBlue"></span> Dedicated Profile Data
@@ -199,10 +218,8 @@ export default function EditMemberPage() {
                     </div>
                   </div>
 
+                  {/* Cleaned up URL Section */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                    
-                    {/* NEW: Gateway to the Internal Canvas Builder */}
                     <div className="flex flex-col justify-end">
                       <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Internal Portfolio Engine</label>
                       <Link 
@@ -214,19 +231,6 @@ export default function EditMemberPage() {
                       </Link>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">GitHub / Behance URL</label>
-                      <input type="url" value={formData.github_url} onChange={e => setFormData({...formData, github_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">LinkedIn URL</label>
-                      <input type="url" value={formData.linkedin_url} onChange={e => setFormData({...formData, linkedin_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">X (Twitter) URL</label>
-                      <input type="url" value={formData.twitter_url} onChange={e => setFormData({...formData, twitter_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
-                    </div>
-                  </div>
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">GitHub / Behance URL</label>
                       <input type="url" value={formData.github_url} onChange={e => setFormData({...formData, github_url: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />

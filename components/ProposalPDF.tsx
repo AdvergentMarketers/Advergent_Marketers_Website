@@ -1,10 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 
-
-// SAFTEY FIX 1: Removed Font.register to prevent missing .ttf file crashes. 
-// It will safely use the built-in default font for now.
-
 const styles = StyleSheet.create({
   page: { backgroundColor: '#f8f9fa', padding: 40 }, // Removed fontFamily
   

@@ -58,16 +58,16 @@ export default function AboutPage() {
               {team.map((member) => (
                 <div key={member.id} className="bg-white rounded-2xl border border-matteBlack/10 shadow-sm overflow-hidden flex flex-col group hover:shadow-xl hover:border-accentBlue transition-all duration-300 relative">
                   
-                  {/* Image Vault (If available) */}
+                  {/* Image Vault - CHANGED to aspect-[4/5] for perfect portrait stretching */}
                   {member.image_url && (
-                    <div className="w-full h-48 bg-offWhite relative border-b border-matteBlack/5 overflow-hidden">
+                    <div className="w-full aspect-[4/5] bg-offWhite relative border-b border-matteBlack/5 overflow-hidden">
                       <Image src={member.image_url} alt={member.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
                     </div>
                   )}
                   
                   <div className="p-6 md:p-8 flex-grow">
                     
-                    {/* Fixed Badges Row (No more overlap!) */}
+                    {/* Fixed Badges Row */}
                     <div className="flex items-start justify-between mb-4 min-h-[28px]">
                       <div>
                         {/* Priority 1 (Founder/Lead) Badge */}
@@ -100,10 +100,15 @@ export default function AboutPage() {
                         <strong className="block text-xs uppercase tracking-widest text-matteBlack/40 mb-1">Specialization</strong>
                         {member.specialization}
                       </div>
-                      <div>
-                        <strong className="block text-xs uppercase tracking-widest text-matteBlack/40 mb-1">Background ({member.years_experience} Yrs)</strong>
-                        {member.experience_details}
-                      </div>
+                      
+                      {/* Cleaned up Experience Line (Removed the long background description) */}
+                      {member.years_experience > 0 && (
+                        <div>
+                          <strong className="block text-xs uppercase tracking-widest text-matteBlack/40 mb-1">Experience</strong>
+                          {member.years_experience} {member.years_experience === 1 ? 'Year' : 'Years'}
+                        </div>
+                      )}
+
                       {member.certifications && (
                         <div>
                           <strong className="block text-xs uppercase tracking-widest text-matteBlack/40 mb-1">Licenses</strong>
@@ -116,7 +121,6 @@ export default function AboutPage() {
                   {/* Action Footer */}
                   <div className={`p-6 border-t flex flex-col gap-3 ${member.available_for_freelance ? 'bg-accentBlue/5 border-accentBlue/20' : 'bg-offWhite border-matteBlack/5'}`}>
                     
-                    {/* NEW: Route to Dynamic Profile Page */}
                     <Link 
                       href={`/team/${member.id}`}
                       className="block w-full py-3 text-center text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-300 bg-matteBlack text-white hover:bg-accentBlue hover:shadow-md"
@@ -124,7 +128,6 @@ export default function AboutPage() {
                       View Full Profile
                     </Link>
 
-                    {/* Existing Contact / Hire Button (Converted to Secondary Style) */}
                     <a 
                       href={"mailto:" + member.email}
                       className={`block w-full py-3 text-center text-xs font-bold uppercase tracking-widest rounded-sm transition-all duration-300 ${

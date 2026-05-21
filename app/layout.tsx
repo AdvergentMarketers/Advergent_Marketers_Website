@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import FloatingContact from "@/components/FloatingContact";
 
+
 // Locally hosted font for maximum speed and zero CLS
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -83,11 +84,10 @@ export default function RootLayout({
           <Footer />
         </CurrencyProvider>
         
-        {/* Vercel Performance & Analytics Tracking Active */}
         <Analytics />
         <SpeedInsights />
-
-        {/* NEW: THE FLOATING CONTACT WIDGET */}
+        
+        {/* Simply keep this as is. All the logic is inside FloatingContact.tsx */}
         <FloatingContact />
         
       </body>

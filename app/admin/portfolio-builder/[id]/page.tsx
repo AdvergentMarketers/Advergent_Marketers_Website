@@ -12,18 +12,21 @@ import StandardGridBlock from "@/components/portfolio/blocks/StandardGridBlock";
 import CinematicFadeBlock from "@/components/portfolio/blocks/CinematicFadeBlock";
 import VideoEmbedBlock from "@/components/portfolio/blocks/VideoEmbedBlock";
 import ReelEmbedBlock from "@/components/portfolio/blocks/ReelEmbedBlock"; 
+import BrowserShellBlock from "@/components/portfolio/blocks/BrowserShellBlock"; // NEW IMPORT
 
 type AccentTheme = "blue" | "red";
-type VaultType = "graphic_design" | "video_editing" | "ui_ux";
+// NEW: Added web_development to VaultType
+type VaultType = "graphic_design" | "video_editing" | "ui_ux" | "web_development"; 
 
-// Block Types
+// Block Types (NEW: Added browser_shell)
 type PortfolioBlock = 
   | { type: "hero"; id: string; imageUrl: string; title: string; subtitle: string; accentTheme: AccentTheme }
   | { type: "masonry"; id: string; categoryName: string; images: string[]; accentTheme: AccentTheme }
   | { type: "standard_grid"; id: string; categoryName: string; columns: 2 | 3; images: string[]; accentTheme: AccentTheme }
   | { type: "cinematic_fade"; id: string; imageUrl: string; title: string; descriptionType: "points" | "paragraph"; features: string[]; paragraphText: string; accentTheme: AccentTheme }
   | { type: "video_embed"; id: string; videoUrl: string; title: string; accentTheme: AccentTheme }
-  | { type: "reel_embed"; id: string; videoUrls: string[]; title: string; accentTheme: AccentTheme };
+  | { type: "reel_embed"; id: string; videoUrls: string[]; title: string; accentTheme: AccentTheme }
+  | { type: "browser_shell"; id: string; title: string; liveUrl: string; defaultDevice: "desktop" | "tablet" | "mobile"; accentTheme: AccentTheme };
 
 export default function PortfolioCanvasBuilder() {
   const router = useRouter();
@@ -35,12 +38,13 @@ export default function PortfolioCanvasBuilder() {
   const [isDeploying, setIsDeploying] = useState(false);
   const [memberName, setMemberName] = useState("");
   
-  // THE MULTI-VAULT STATE ENGINE
+  // THE MULTI-VAULT STATE ENGINE (NEW: Added web_development initialization)
   const [activeVault, setActiveVault] = useState<VaultType>("graphic_design");
   const [vaultData, setVaultData] = useState<Record<VaultType, { blocks: PortfolioBlock[] }>>({
     graphic_design: { blocks: [] },
     video_editing: { blocks: [] },
-    ui_ux: { blocks: [] }
+    ui_ux: { blocks: [] },
+    web_development: { blocks: [] }
   });
 
   // NATIVE DRAG & DROP STATE
@@ -67,7 +71,8 @@ export default function PortfolioCanvasBuilder() {
             setVaultData({
               graphic_design: data.portfolio_data.graphic_design || { blocks: [] },
               video_editing: data.portfolio_data.video_editing || { blocks: [] },
-              ui_ux: data.portfolio_data.ui_ux || { blocks: [] }
+              ui_ux: data.portfolio_data.ui_ux || { blocks: [] },
+              web_development: data.portfolio_data.web_development || { blocks: [] } // NEW
             });
           }
         }
@@ -95,28 +100,26 @@ export default function PortfolioCanvasBuilder() {
     updateActiveBlocks(newBlocks);
   };
 
-  // HTML5 Drag Handlers
   const handleDragStart = (index: number) => setDraggedIndex(index);
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault(); // Required to allow dropping
-  };
+  const handleDragOver = (e: React.DragEvent, index: number) => { e.preventDefault(); };
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
-    if (draggedIndex !== null && draggedIndex !== dropIndex) {
-      moveBlock(draggedIndex, dropIndex);
-    }
+    if (draggedIndex !== null && draggedIndex !== dropIndex) moveBlock(draggedIndex, dropIndex);
     setDraggedIndex(null);
   };
   const handleDragEnd = () => setDraggedIndex(null);
-  // -------------------------
 
   const addHeroBlock = () => updateActiveBlocks([...activeBlocks, { type: "hero", id: Date.now().toString(), imageUrl: "", title: "", subtitle: "", accentTheme: "blue" }]);
   const addMasonryBlock = () => updateActiveBlocks([...activeBlocks, { type: "masonry", id: Date.now().toString(), categoryName: "", images: [], accentTheme: "blue" }]);
   const addStandardGrid = () => updateActiveBlocks([...activeBlocks, { type: "standard_grid", id: Date.now().toString(), categoryName: "", columns: 2, images: [], accentTheme: "blue" }]);
   const addCinematicBlock = () => updateActiveBlocks([...activeBlocks, { type: "cinematic_fade", id: Date.now().toString(), imageUrl: "", title: "", descriptionType: "points", features: [], paragraphText: "", accentTheme: "blue" }]);
   const addVideoBlock = () => updateActiveBlocks([...activeBlocks, { type: "video_embed", id: Date.now().toString(), videoUrl: "", title: "", accentTheme: "blue" }]);
-  const removeBlock = (id: string) => updateActiveBlocks(activeBlocks.filter(b => b.id !== id));
   const addReelBlock = () => updateActiveBlocks([...activeBlocks, { type: "reel_embed", id: Date.now().toString(), videoUrls: [], title: "", accentTheme: "blue" }]);
+  
+  // NEW: Add Browser Shell Block
+  const addBrowserShellBlock = () => updateActiveBlocks([...activeBlocks, { type: "browser_shell", id: Date.now().toString(), title: "", liveUrl: "", defaultDevice: "desktop", accentTheme: "blue" }]);
+  
+  const removeBlock = (id: string) => updateActiveBlocks(activeBlocks.filter(b => b.id !== id));
   const updateBlock = (id: string, field: string, value: any) => {
     updateActiveBlocks(activeBlocks.map(block => block.id === id ? { ...block, [field]: value } : block));
   };
@@ -159,10 +162,12 @@ export default function PortfolioCanvasBuilder() {
           <h1 className="text-xl font-extrabold text-matteBlack tracking-tight mb-4">
             Editing: {memberName}
           </h1>
+          {/* NEW: 4-Way Toggle for the Vaults */}
           <div className="flex bg-offWhite p-1 rounded-lg border border-matteBlack/5">
-            <button onClick={() => setActiveVault("graphic_design")} className={`flex-1 py-2 text-[10px] font-extrabold uppercase tracking-widest rounded-md transition-all ${activeVault === "graphic_design" ? "bg-white text-accentBlue shadow-sm" : "text-matteBlack/50 hover:text-matteBlack"}`}>Graphics</button>
-            <button onClick={() => setActiveVault("video_editing")} className={`flex-1 py-2 text-[10px] font-extrabold uppercase tracking-widest rounded-md transition-all ${activeVault === "video_editing" ? "bg-white text-accentBlue shadow-sm" : "text-matteBlack/50 hover:text-matteBlack"}`}>Video</button>
-            <button onClick={() => setActiveVault("ui_ux")} className={`flex-1 py-2 text-[10px] font-extrabold uppercase tracking-widest rounded-md transition-all ${activeVault === "ui_ux" ? "bg-white text-accentBlue shadow-sm" : "text-matteBlack/50 hover:text-matteBlack"}`}>UI/UX</button>
+            <button onClick={() => setActiveVault("graphic_design")} className={`flex-1 py-2 text-[8px] sm:text-[10px] font-extrabold uppercase tracking-widest rounded-md transition-all ${activeVault === "graphic_design" ? "bg-white text-accentBlue shadow-sm" : "text-matteBlack/50 hover:text-matteBlack"}`}>Graphics</button>
+            <button onClick={() => setActiveVault("video_editing")} className={`flex-1 py-2 text-[8px] sm:text-[10px] font-extrabold uppercase tracking-widest rounded-md transition-all ${activeVault === "video_editing" ? "bg-white text-accentBlue shadow-sm" : "text-matteBlack/50 hover:text-matteBlack"}`}>Video</button>
+            <button onClick={() => setActiveVault("ui_ux")} className={`flex-1 py-2 text-[8px] sm:text-[10px] font-extrabold uppercase tracking-widest rounded-md transition-all ${activeVault === "ui_ux" ? "bg-white text-accentBlue shadow-sm" : "text-matteBlack/50 hover:text-matteBlack"}`}>UI/UX</button>
+            <button onClick={() => setActiveVault("web_development")} className={`flex-1 py-2 text-[8px] sm:text-[10px] font-extrabold uppercase tracking-widest rounded-md transition-all ${activeVault === "web_development" ? "bg-white text-accentBlue shadow-sm" : "text-matteBlack/50 hover:text-matteBlack"}`}>Web</button>
           </div>
         </div>
 
@@ -179,7 +184,6 @@ export default function PortfolioCanvasBuilder() {
           {activeBlocks.map((block, index) => (
             <div 
               key={block.id} 
-              // DRAG AND DROP WRAPPER
               draggable 
               onDragStart={() => handleDragStart(index)}
               onDragOver={(e) => handleDragOver(e, index)}
@@ -189,8 +193,6 @@ export default function PortfolioCanvasBuilder() {
                 ${draggedIndex === index ? 'opacity-40 border-accentBlue scale-[0.98]' : 'border-matteBlack/5 hover:border-matteBlack/20'}`}
             >
               <div className="flex justify-between items-center mb-4 pb-2 border-b border-matteBlack/10">
-                
-                {/* Drag Handle & Label */}
                 <div className="flex items-center gap-3">
                   <div className="cursor-grab active:cursor-grabbing text-matteBlack/30 hover:text-matteBlack transition-colors">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" /></svg>
@@ -211,14 +213,9 @@ export default function PortfolioCanvasBuilder() {
                   </select>
                 </div>
 
-                {/* Arrow Controls & Remove */}
                 <div className="flex items-center gap-2">
-                  <button onClick={() => moveBlock(index, index - 1)} disabled={index === 0} className="w-6 h-6 flex items-center justify-center rounded bg-matteBlack/5 text-matteBlack hover:bg-matteBlack/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 15l7-7 7 7" /></svg>
-                  </button>
-                  <button onClick={() => moveBlock(index, index + 1)} disabled={index === activeBlocks.length - 1} className="w-6 h-6 flex items-center justify-center rounded bg-matteBlack/5 text-matteBlack hover:bg-matteBlack/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
-                  </button>
+                  <button onClick={() => moveBlock(index, index - 1)} disabled={index === 0} className="w-6 h-6 flex items-center justify-center rounded bg-matteBlack/5 text-matteBlack hover:bg-matteBlack/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 15l7-7 7 7" /></svg></button>
+                  <button onClick={() => moveBlock(index, index + 1)} disabled={index === activeBlocks.length - 1} className="w-6 h-6 flex items-center justify-center rounded bg-matteBlack/5 text-matteBlack hover:bg-matteBlack/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg></button>
                   <button onClick={() => removeBlock(block.id)} className="text-[10px] font-bold text-red-500 uppercase tracking-widest hover:underline ml-2">Remove</button>
                 </div>
               </div>
@@ -275,12 +272,24 @@ export default function PortfolioCanvasBuilder() {
                   {block.descriptionType === "paragraph" ? (
                     <textarea rows={5} placeholder="Write full paragraph..." value={block.paragraphText || ""} onChange={e => updateBlock(block.id, 'paragraphText', e.target.value)} className="w-full px-3 py-2 text-xs font-semibold border border-matteBlack/10 rounded-md focus:ring-accentBlue resize-none" />
                   ) : (
-                    <>
-                      <textarea rows={4} placeholder="Features (Heading: Description) Comma sep." value={block.features.join(', ')} onChange={e => updateBlock(block.id, 'features', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} className="w-full px-3 py-2 text-xs font-semibold border border-matteBlack/10 rounded-md focus:ring-accentBlue resize-none" />
-                    </>
+                    <textarea rows={4} placeholder="Features (Heading: Description) Comma sep." value={block.features.join(', ')} onChange={e => updateBlock(block.id, 'features', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} className="w-full px-3 py-2 text-xs font-semibold border border-matteBlack/10 rounded-md focus:ring-accentBlue resize-none" />
                   )}
                 </div>
               )}
+
+              {/* NEW: Input fields for the Browser Shell */}
+              {block.type === "browser_shell" && (
+                <div className="space-y-3">
+                  <input type="text" placeholder="Project Title (e.g., Rig Builders Store)" value={block.title} onChange={e => updateBlock(block.id, 'title', e.target.value)} className="w-full px-3 py-2 text-xs font-semibold border border-matteBlack/10 rounded-md focus:ring-accentBlue" />
+                  <input type="url" placeholder="Live URL (e.g., https://rigbuilders.in)" value={block.liveUrl} onChange={e => updateBlock(block.id, 'liveUrl', e.target.value)} className="w-full px-3 py-2 text-xs font-semibold border border-matteBlack/10 rounded-md focus:ring-accentBlue" />
+                  <select value={block.defaultDevice || "desktop"} onChange={e => updateBlock(block.id, 'defaultDevice', e.target.value)} className="w-full px-3 py-2 text-xs font-semibold border border-matteBlack/10 rounded-md focus:ring-accentBlue cursor-pointer bg-white">
+                    <option value="desktop">View: Desktop Full Width</option>
+                    <option value="tablet">View: Tablet Size</option>
+                    <option value="mobile">View: Mobile Size</option>
+                  </select>
+                </div>
+              )}
+
             </div>
           ))}
         </div>
@@ -292,8 +301,9 @@ export default function PortfolioCanvasBuilder() {
             <button onClick={addMasonryBlock} className="py-2 bg-matteBlack/5 text-matteBlack text-[10px] font-bold uppercase tracking-widest rounded hover:bg-matteBlack/10 transition">+ Masonry</button>
             <button onClick={addStandardGrid} className="py-2 bg-matteBlack/5 text-matteBlack text-[10px] font-bold uppercase tracking-widest rounded hover:bg-matteBlack/10 transition">+ Grid</button>
             <button onClick={addCinematicBlock} className="py-2 bg-matteBlack text-white text-[10px] font-bold uppercase tracking-widest rounded hover:bg-accentBlue transition shadow-md">+ Cinematic Fade</button>
-            <button onClick={addReelBlock} className="py-2 bg-matteBlack text-white text-[10px] font-bold uppercase tracking-widest rounded hover:bg-accentBlue transition shadow-md">+ Vertical Reel</button>
             <button onClick={addVideoBlock} className="py-2 bg-matteBlack text-white text-[10px] font-bold uppercase tracking-widest rounded hover:bg-accentBlue transition shadow-md">+ Video Player</button>
+            {/* NEW: The button to spawn the shell */}
+            <button onClick={addBrowserShellBlock} className="py-2 bg-matteBlack text-white text-[10px] font-bold uppercase tracking-widest rounded hover:bg-accentBlue transition shadow-md">+ Live Website</button>
           </div>
           <button onClick={handleDeploy} disabled={isDeploying} className="w-full py-4 bg-accentBlue text-white text-xs font-extrabold uppercase tracking-widest rounded shadow-xl hover:opacity-90 transition disabled:opacity-50">
             {isDeploying ? "Pushing to Database..." : "Deploy Portfolio to Live"}
@@ -309,7 +319,7 @@ export default function PortfolioCanvasBuilder() {
           </span>
         </div>
 
-        <div className="max-w-5xl mx-auto space-y-24">
+        <div className="max-w-8xl mx-auto space-y-24">
           {activeBlocks.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[60vh] text-matteBlack/30">
               <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -323,6 +333,10 @@ export default function PortfolioCanvasBuilder() {
               if (block.type === "cinematic_fade") return <CinematicFadeBlock key={block.id} imageUrl={block.imageUrl} title={block.title} descriptionType={block.descriptionType} features={block.features} paragraphText={block.paragraphText} accentTheme={block.accentTheme} />;
               if (block.type === "video_embed") return <VideoEmbedBlock key={block.id} videoUrl={block.videoUrl} title={block.title} accentTheme={block.accentTheme} />;
               if (block.type === "reel_embed") return <ReelEmbedBlock key={block.id} videoUrls={block.videoUrls} title={block.title} accentTheme={block.accentTheme} />;
+              
+              // NEW: Right Desk Rendering
+              if (block.type === "browser_shell") return <BrowserShellBlock key={block.id} title={block.title} liveUrl={block.liveUrl} defaultDevice={block.defaultDevice} accentTheme={block.accentTheme} />;
+              
               return null;
             })
           )}

@@ -5,6 +5,8 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { FadeIn } from "../../../../components/ui/MotionWrapper";
 import { createClient } from "../../../../lib/supabase";
+import { forceUpdateOrCreatePassword } from "../../../actions/auth";
+
 
 export default function EditMemberPage() {
   const router = useRouter();
@@ -14,8 +16,26 @@ export default function EditMemberPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUpdatingPass, setIsUpdatingPass] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
-
+  const [isResetting, setIsResetting] = useState(false);
+  
+  const handlePasswordReset = async () => {
+    if (!formData.email) return;
+    setIsResetting(true);
+    setMessage(null);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(formData.email);
+      if (error) throw error;
+      setMessage({ type: 'success', text: `Password reset link sent to ${formData.email}` });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message });
+    } finally {
+      setIsResetting(false);
+    }
+  };
   // 1. STATE DECLARED AT THE TOP LEVEL
   const [formData, setFormData] = useState({
     name: "",
@@ -34,7 +54,8 @@ export default function EditMemberPage() {
     years_experience: 0,
     priority: 10,
     available_for_freelance: false,
-    image_url: ""
+    image_url: "",
+    auth_user_id: ""
   });
 
   // 2. USE-EFFECT PULLS THE DATA AND UPDATES THE STATE
@@ -66,7 +87,8 @@ export default function EditMemberPage() {
           years_experience: data.years_experience || 0,
           priority: data.priority || 10,
           available_for_freelance: data.available_for_freelance || false,
-          image_url: data.image_url || ""
+          image_url: data.image_url || "",
+          auth_user_id: data.auth_user_id || ""
         });
       }
       setIsLoading(false);
@@ -99,6 +121,44 @@ export default function EditMemberPage() {
     } finally {
       setIsSaving(false);
     }
+  };
+  
+  // THE MASTER OVERRIDE FUNCTION
+  // THE UPGRADED MASTER OVERRIDE FUNCTION
+  const handleForcePasswordUpdate = async () => {
+    if (!newPassword || newPassword.length < 6) {
+      setMessage({ type: 'error', text: "Password must be at least 6 characters." });
+      return;
+    }
+    if (!formData.email) {
+      setMessage({ type: 'error', text: "Please enter an email address first." });
+      return;
+    }
+
+    setIsUpdatingPass(true);
+    setMessage(null);
+
+    // Send everything to the smart backend function
+    const result = await forceUpdateOrCreatePassword(
+      memberId,
+      formData.email,
+      newPassword,
+      formData.auth_user_id 
+    );
+
+    if (result.success) {
+      setMessage({ type: 'success', text: `Master Override: Account linked and password set!` });
+      setNewPassword(""); 
+      
+      // If a new Auth ID was just created, save it to the local state
+      if (result.newAuthId && !formData.auth_user_id) {
+        setFormData(prev => ({...prev, auth_user_id: result.newAuthId}));
+      }
+    } else {
+      setMessage({ type: 'error', text: result.message });
+    }
+    
+    setIsUpdatingPass(false);
   };
 
   const handleDelete = async () => {
@@ -144,6 +204,8 @@ export default function EditMemberPage() {
 
             <form onSubmit={handleSave} className="space-y-8">
               
+              
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Full Name</label>
@@ -152,6 +214,28 @@ export default function EditMemberPage() {
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Email Address</label>
                   <input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" />
+                </div>
+              </div>
+
+              {/* THE NEW MASTER PASSWORD OVERRIDE SECTION */}
+              <div className="bg-red-50/50 border border-red-100 p-6 rounded-xl mt-6">
+                <label className="block text-xs font-bold uppercase tracking-widest text-red-600 mb-2">Master Admin: Force Password Change</label>
+                <div className="flex gap-4">
+                  <input 
+                    type="text" 
+                    value={newPassword} 
+                    onChange={e => setNewPassword(e.target.value)} 
+                    className="flex-grow px-4 py-3 bg-white border border-red-200 rounded-md focus:ring-2 focus:ring-red-400 text-sm font-semibold" 
+                    placeholder="Type new password here..." 
+                  />
+                  <button 
+                    type="button" 
+                    onClick={handleForcePasswordUpdate} 
+                    disabled={isUpdatingPass || !newPassword}
+                    className="px-6 py-3 bg-red-600 text-white text-xs font-bold uppercase tracking-widest rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 whitespace-nowrap shadow-sm"
+                  >
+                    {isUpdatingPass ? "Overriding..." : "Force Change"}
+                  </button>
                 </div>
               </div>
 

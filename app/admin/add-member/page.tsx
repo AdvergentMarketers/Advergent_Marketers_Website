@@ -17,6 +17,7 @@ export default function AddMemberPage() {
     name: "",
     email: "",
     designation: "",
+    password: "",
     specialization: "",
     experience_details: "",
     bio: "",
@@ -33,30 +34,56 @@ export default function AddMemberPage() {
     image_url: ""
   });
 
+  // Replace your existing handleSubmit function with this:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setMessage(null);
 
     try {
+      // 1. Create the Auth User first
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (authError) throw authError;
+      if (!authData.user) throw new Error("Failed to create auth user.");
+
+      // 2. Insert into team_members table using the new auth_user_id
       const payload = {
-        ...formData,
+        name: formData.name,
+        email: formData.email,
+        designation: formData.designation,
+        specialization: formData.specialization,
+        experience_details: formData.experience_details,
+        bio: formData.bio,
+        portfolio_url: formData.portfolio_url,
+        linkedin_url: formData.linkedin_url,
+        twitter_url: formData.twitter_url,
+        github_url: formData.github_url,
+        brands_worked_with: formData.brands_worked_with,
+        software_stack: formData.software_stack,
+        certifications: formData.certifications,
         years_experience: parseInt(formData.years_experience) || 0,
-        priority: parseInt(formData.priority) || 10 
+        priority: parseInt(formData.priority) || 10,
+        available_for_freelance: formData.available_for_freelance,
+        image_url: formData.image_url,
+        auth_user_id: authData.user.id // THIS IS THE LINK
       };
 
-      const { error } = await supabase.from('team_members').insert([payload]);
+      const { error: dbError } = await supabase.from('team_members').insert([payload]);
 
-      if (error) throw error;
+      if (dbError) throw dbError;
 
-      setMessage({ type: 'success', text: 'Team member successfully deployed to the roster!' });
+      setMessage({ type: 'success', text: 'Team member created and added to roster!' });
       
       setTimeout(() => {
         router.push('/admin');
       }, 1500);
 
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || "Failed to add team member." });
+      setMessage({ type: 'error', text: error.message || "Failed to onboard team member." });
     } finally {
       setIsLoading(false);
     }
@@ -97,6 +124,11 @@ export default function AddMemberPage() {
                   <input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="jane@advergentmarketers.com" />
                 </div>
               </div>
+              
+              <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-matteBlack/60 mb-2">Setup Password *</label>
+                  <input type="password" required value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} className="w-full px-4 py-3 bg-offWhite border border-matteBlack/10 rounded-md focus:ring-2 focus:ring-accentBlue text-sm font-semibold" placeholder="••••••••" />
+                </div> 
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>

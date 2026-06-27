@@ -3,8 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "../../../components/ui/MotionWrapper"; 
+// ADD THIS RIGHT BELOW YOUR IMPORTS
+const getYouTubeEmbedUrl = (url: string) => {
+  if (!url) return '';
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11)
+    ? `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`
+    : url;
+};
 
 export default function DesktopCaseStudy({ project }: { project: any }) {
+  
 
 return (
     <div className="min-h-screen bg-offWhite pt-24 pb-32">
@@ -86,7 +96,7 @@ return (
                       {/* Label & Metric above the bar on mobile, inside on desktop */}
                       <div className="flex flex-col md:flex-row md:items-end justify-between mb-2 md:mb-0 md:absolute md:inset-y-0 md:left-6 md:right-6 md:z-20 pointer-events-none">
                         <span className="text-xs font-bold text-white/50 uppercase tracking-widest md:self-center">{step.label}</span>
-                        <span className="text-2xl md:text-3xl font-extrabold text-white md:self-center">{step.metric}</span>
+                        <span className="text-2xl md:text-xs font-extrabold text-white md:self-center">{step.metric}</span>
                       </div>
                       
                       {/* The Animated Bar */}
@@ -145,33 +155,30 @@ return (
           </FadeIn>
         )}
 
-        {/* 4. CAMPAIGN MEDIA (Dynamic Aspect Ratio Vault) */}
+        {/* 4. CAMPAIGN MEDIA (YouTube Vault) */}
         {project.video_assets && project.video_assets.length > 0 && (
           <FadeIn>
             <h2 className="text-3xl md:text-5xl font-extrabold text-matteBlack tracking-tight mb-12">Motion & <span className="text-accentBlue">Media</span></h2>
             <div className="flex flex-wrap gap-8">
               {project.video_assets.map((vid: any, i: number) => {
+                const embedUrl = getYouTubeEmbedUrl(vid.link);
                 const ratio = vid.aspectRatio || '16/9';
-                // Vertical reels stay slim, standard videos span wider
                 const widthClass = ratio === '9/16' ? 'w-full md:w-[calc(33%-21px)]' : 'w-full md:w-[calc(50%-16px)]';
 
                 return (
-                  <a 
+                  <div 
                     key={i} 
-                    href={vid.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className={`group block relative ${widthClass} bg-matteBlack rounded-2xl overflow-hidden shadow-lg border border-matteBlack/10`}
+                    className={`relative ${widthClass} bg-matteBlack rounded-2xl overflow-hidden shadow-lg border border-matteBlack/10`}
                     style={{ aspectRatio: ratio }}
                   >
-                    <Image src={vid.thumbnail} alt="Video Thumbnail" fill className="object-cover opacity-70 group-hover:opacity-40 transition-opacity duration-500" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="bg-white text-matteBlack px-6 py-4 rounded-full font-extrabold uppercase tracking-widest text-xs flex items-center gap-3 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 shadow-2xl">
-                        <span>Play Campaign</span>
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
-                      </div>
-                    </div>
-                  </a>
+                    <iframe
+                      src={embedUrl}
+                      title={`Campaign Video ${i + 1}`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="absolute top-0 left-0 w-full h-full border-0"
+                    />
+                  </div>
                 );
               })}
             </div>

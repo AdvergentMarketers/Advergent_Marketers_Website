@@ -180,34 +180,36 @@ export default function AddCaseStudyBuilder() {
                   </div>
                 </div>
 
-                {/* Videos */}
+                {/* Videos (YouTube Integration) */}
                 <div className="space-y-2 pt-4 border-t border-matteBlack/5">
-                  <label className="block text-sm font-bold text-matteBlack">Videos (Drive Links)</label>
+                  <label className="block text-sm font-bold text-matteBlack">YouTube Videos (Unlisted or Public)</label>
                   {videos.map((vid, index) => (
                      <div key={index} className="flex gap-4 items-center bg-offWhite p-2 rounded-md border border-matteBlack/5">
                         <span className="text-xs font-bold bg-matteBlack/10 px-2 py-1 rounded">{vid.aspectRatio}</span>
-                        <span className="text-xs truncate flex-1">Thumb: {vid.thumbnail}</span>
-                        <button type="button" onClick={() => handleRemoveItem(setVideos, index)} className="text-red-500 text-xs font-bold px-2">X</button>
+                        <span className="text-sm font-semibold truncate flex-1 text-accentBlue">{vid.link}</span>
+                        <button type="button" onClick={() => handleRemoveItem(setVideos, index)} className="text-red-500 text-xs font-bold px-2 hover:bg-red-50 rounded transition">X</button>
                      </div>
                   ))}
-                  <div className="flex gap-2">
-                    <select id="vidRatio" className="w-1/5 px-2 py-2 bg-offWhite border border-matteBlack/10 rounded-md text-xs cursor-pointer">
-                      <option value="16/9" selected>16:9 (Standard)</option>
-                      <option value="9/16">9:16 (Reel/TikTok)</option>
+                  <div className="flex gap-3">
+                    <select id="vidRatio" className="w-1/4 px-3 py-2 bg-offWhite border border-matteBlack/10 rounded-md text-sm cursor-pointer font-semibold text-matteBlack/70">
+                      <option value="16/9">16:9 (Standard)</option>
+                      <option value="9/16">9:16 (Shorts/Reel)</option>
                       <option value="1/1">1:1 (Square)</option>
                     </select>
-                    <input type="text" id="vidThumb" placeholder="Thumbnail URL" className="w-1/4 px-3 py-2 bg-offWhite border border-matteBlack/10 rounded-md text-sm" />
-                    <input type="text" id="vidLink" placeholder="Google Drive Link" className="flex-1 px-3 py-2 bg-offWhite border border-matteBlack/10 rounded-md text-sm" />
+                    {/* Simplified to just ask for the YouTube Link */}
+                    <input type="url" id="vidLink" placeholder="Paste YouTube Link (e.g., https://youtu.be/...)" className="flex-1 px-4 py-2 bg-offWhite border border-matteBlack/10 rounded-md text-sm focus:ring-2 focus:ring-accentBlue" />
+                    
                     <button type="button" onClick={() => {
-                      const thumb = (document.getElementById('vidThumb') as HTMLInputElement).value;
                       const link = (document.getElementById('vidLink') as HTMLInputElement).value;
                       const ratio = (document.getElementById('vidRatio') as HTMLSelectElement).value;
-                      if(thumb && link) {
-                        handleAddItem(setVideos, { thumbnail: thumb, link, aspectRatio: ratio });
-                        (document.getElementById('vidThumb') as HTMLInputElement).value = '';
+                      if(link) {
+                        // We pass an empty thumbnail string to keep your database schema happy!
+                        handleAddItem(setVideos, { thumbnail: "", link, aspectRatio: ratio });
                         (document.getElementById('vidLink') as HTMLInputElement).value = '';
                       }
-                    }} className="px-4 py-2 bg-matteBlack/10 text-matteBlack rounded-md text-sm font-bold hover:bg-matteBlack/20 transition">Add Video</button>
+                    }} className="px-6 py-2 bg-matteBlack text-white rounded-md text-sm font-bold hover:bg-matteBlack/90 transition shadow-sm">
+                      Add YouTube Video
+                    </button>
                   </div>
                 </div>
               </section>

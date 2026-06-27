@@ -29,6 +29,9 @@ export default function AdminDashboard() {
       ]);
 
       if (portfolioRes.data) setCaseStudies(portfolioRes.data);
+      if (clientsRes.error) {
+        console.error("🚨 SUPABASE BLOCKED CLIENTS FETCH:", clientsRes.error.message);
+      }
       if (clientsRes.data) setClients(clientsRes.data);
       if (teamRes.data) setTeamMembers(teamRes.data);
       if (servicesRes.data) setServices(servicesRes.data);

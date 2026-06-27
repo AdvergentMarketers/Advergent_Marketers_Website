@@ -4,7 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { FadeIn } from "../../../components/ui/MotionWrapper"; 
 
+// ADD THIS RIGHT BELOW YOUR IMPORTS
+const getYouTubeEmbedUrl = (url: string) => {
+  if (!url) return '';
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11)
+    ? `https://www.youtube.com/embed/${match[2]}?autoplay=0&rel=0&modestbranding=1`
+    : url;
+};
+
 export default function MobileCaseStudy({ project }: { project: any }) {
+  
   return (
     <div className="min-h-screen bg-offWhite pt-20 pb-24 overflow-x-hidden">
       
@@ -72,8 +83,8 @@ export default function MobileCaseStudy({ project }: { project: any }) {
                   return (
                     <div key={i} className="relative flex flex-col">
                       <div className="flex justify-between items-end mb-2">
-                        <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">{step.label}</span>
-                        <span className="text-xl font-extrabold text-white">{step.metric}</span>
+                        <span className="text-[7px] font-bold text-white/50 uppercase tracking-widest">{step.label}</span>
+                        <span className="text-[9px] font-extrabold text-white">{step.metric}</span>
                       </div>
                       <div className="w-full h-8 bg-white/5 rounded-lg overflow-hidden relative border border-white/10">
                         <div className="h-full bg-accentBlue/40 absolute left-0 top-0 transition-all duration-1000" style={{ width: `${calculatedWidth}%` }}></div>
@@ -108,7 +119,7 @@ export default function MobileCaseStudy({ project }: { project: any }) {
           </FadeIn>
         )}
 
-        {/* 4. MOBILE CAMPAIGN MEDIA */}
+        {/* 4. MOBILE CAMPAIGN MEDIA (YouTube) */}
         {project.video_assets && project.video_assets.length > 0 && (
           <FadeIn>
             <h2 className="text-3xl font-extrabold text-matteBlack tracking-tight mb-6">
@@ -116,17 +127,19 @@ export default function MobileCaseStudy({ project }: { project: any }) {
             </h2>
             <div className="flex flex-col gap-6">
               {project.video_assets.map((vid: any, i: number) => {
+                const embedUrl = getYouTubeEmbedUrl(vid.link);
                 const ratio = vid.aspectRatio || '16/9';
                 
                 return (
-                  <a key={i} href={vid.link} target="_blank" rel="noopener noreferrer" className="block relative w-full bg-matteBlack rounded-xl overflow-hidden shadow-lg border border-matteBlack/10" style={{ aspectRatio: ratio }}>
-                    <Image src={vid.thumbnail} alt="Video Thumbnail" fill className="object-cover opacity-70" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="bg-white text-matteBlack px-4 py-2 rounded-full font-extrabold uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-2xl">
-                        <span>Play Campaign</span>
-                      </div>
-                    </div>
-                  </a>
+                  <div key={i} className="relative w-full bg-matteBlack rounded-xl overflow-hidden shadow-lg border border-matteBlack/10" style={{ aspectRatio: ratio }}>
+                    <iframe
+                      src={embedUrl}
+                      title={`Campaign Video ${i + 1}`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="absolute top-0 left-0 w-full h-full border-0"
+                    />
+                  </div>
                 );
               })}
             </div>

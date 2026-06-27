@@ -30,15 +30,26 @@ export default function ManageClientPage() {
   });
 
   // Fetch Client Data on Load
+  // Fetch Client Data on Load (DIAGNOSTIC MODE)
   useEffect(() => {
     const fetchClient = async () => {
+      // 1. Log the exact ID we are pulling from the URL
+      console.log("🔍 DIAGNOSTIC - URL ID:", clientId);
+
       const { data, error } = await supabase
         .from('clients')
         .select('*')
         .eq('id', clientId)
         .single();
 
+      // 2. EXPOSE THE ERROR: If Supabase blocks it, print it to the console AND the screen
+      if (error) {
+        console.error("❌ SUPABASE ERROR:", error);
+        setMessage({ type: 'error', text: `Database Error: ${error.message}` });
+      }
+
       if (data) {
+        console.log("✅ SUCCESS - Client Found:", data.company_name);
         setFormData({
           client_name: data.client_name || "",
           company_name: data.company_name || "",

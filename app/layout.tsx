@@ -66,6 +66,11 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     capable: true,
   },
+
+  // Pinterest domain verification (renders <meta name="p:domain_verify" ... /> in <head>)
+  other: {
+    "p:domain_verify": "473afed16903163a8e2cce815fb2dcb2",
+  },
 };
 
 export default function RootLayout({
